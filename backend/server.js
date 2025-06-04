@@ -1,19 +1,34 @@
-const connectDB = require('./db');
 const express = require('express');
-const auth = require('./middleware/auth');
+require ("dotenv").config();
+const cors = require ("cors");
+
+
+
+const connectDB = require('./db');
+const authRoutes= require('./routes/auth.js');
+const auth = require('./middleware/auth.js');
 
 const app = express();
-const PORT=  3001;
+app.use(express.json());
+app.use(cors());
+app.options('*', cors());
 
 connectDB();
 
-app.use(auth);
+app.use("/api/auth", authRoutes);
 
-app.get("/" , (req, res) => {
-    res.send("Middleware funcionality is working");
+const PORT = process.env.PORT || 3001;
+
+
+
+app.get("/", (req,res) =>{
+    console.log("Middleware funciono")
+});
+
+app.get("/api/protegida" , auth, (req, res) => {
+    res.send(`User with id  ${req.user.userId} is authenticated`);
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-}
-);
+    console.log(`Test server running on http://localhost:${PORT}`)
+});
