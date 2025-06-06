@@ -2,14 +2,14 @@ import { useState} from "react";
 import Popup from "./components/Popup/Popup";
 import Card from "./components/Card/Card";
 import ImagePopup from "./components/ImagePopup/ImagePopup";
-//import api from "../../utils/api";
+import api from "../../utils/api";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
 function Main({ cards, onCardLike, onCardDelete }) {
   const [activePopup, setActivePopup] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
 
-  //const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser } = useContext(CurrentUserContext);
 
   function handleImageClick(card) {
     setSelectedCard(card);

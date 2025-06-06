@@ -1,6 +1,6 @@
 import deleteCard from "../../../../assets/images/trash.svg";
 import { useContext } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../../../../contexts/CurrentUserContext.js";
 
 export default function Card({ card, onImageClick, onCardLike, onCardDelete }) {
   const { name, link, isLiked } = card;

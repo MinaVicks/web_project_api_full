@@ -10,7 +10,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch ("http://localhost:3001/api/auth/register", {
+    const res = await fetch ("http://localhost:3001/api/auth/signup", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

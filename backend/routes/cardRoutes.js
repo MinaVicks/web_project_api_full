@@ -1,21 +1,22 @@
-const express = require("express");
+// routes/cardRoutes.js
+const express = require('express');
+const router = express.Router();
+const auth = require('../middleware/auth');
 const {
   getCards,
   createCard,
   deleteCard,
   likeCard,
-  dislikeCard,
-} = require("../controllers/cardControllers.js");
-const auth = require("../middleware/auth.js");
-const router = express.Router();
+  dislikeCard
+} = require('../controllers/cardControllers.js');
 
 router.use(auth);
 
-// All routes now properly defined with parameter names
-router.get("/", getCards);
-router.post("/", createCard);
-router.delete("/:cardId", deleteCard);          // :cardId parameter
-router.put("/:cardId/likes", likeCard);        // :cardId parameter
-router.delete("/:cardId/likes", dislikeCard);  // :cardId parameter
+// Properly formatted routes
+router.get('/cards', getCards);
+router.post('/cards', createCard);
+router.delete('/:cardId', deleteCard); // Note :cardId
+router.put('/:cardId/likes', likeCard); // Note :cardId
+router.delete('/:cardId/likes', dislikeCard); // Note :cardId
 
 module.exports = router;
