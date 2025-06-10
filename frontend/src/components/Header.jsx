@@ -8,8 +8,49 @@ import NewCard from "./Main/components/NewCard/NewCard";
 import EditAvatar from "./Main/components/EditAvatar/EditAvatar";
 import EditProfile from "./Main/components/EditProfile/EditProfile";
 import { Link } from "react-router-dom";
+import { useContext , useState} from 'react';
+import { UserContext } from '../contexts/UserContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
+  //const {handleUpdateAvatar}= useContext(UserContext);
+
+  const { userData } = useContext(UserContext);
+  const { logout } = useContext(UserContext);
+  const navigate = useNavigate();
+  
+  const [popup, setPopup] = useState(null);
+
+  const closePopup = () => setPopup(null);
+
+   const newCardPopup = {
+    title: "Nuevo lugar",
+    children: <NewCard onSubmitSuccess={closePopup} />,
+  };
+
+  const editProfile = {
+    title: "Editar perfil",
+    children: <EditProfile onSubmitSuccess={closePopup} />,
+  };
+
+   const editAvatar = {
+    title: "Cambiar avatar",
+    children: <EditAvatar onSubmitSuccess={closePopup} />,
+  };
+
+  function handleOpenPopup(popup) {
+    setPopup(popup);
+  }
+
+  function handleClosePopup() {
+    setPopup(null);
+  }
+
+    const handleLogout = () => {
+    logout();
+    navigate('/signin'); // Redirect to login page
+  };
+
   return (
     <header className="header">
       <div className="header__container">
@@ -19,9 +60,13 @@ function Header() {
 
         <div className="profile__user-section">
           <div className="profile__user-mail">
-            <p>welcome</p>
+            {userData.isAuthenticated ? (
+          <p>Welcome, {userData.email}</p>
+        ) : (
+          <p>Welcome, Guest</p>
+        )}
           </div>
-          <button className="profile__login-link" >
+          <button className="profile__login-link" onClick={handleLogout}>
             Cerrar sesión
           </button>
         </div>
@@ -34,7 +79,7 @@ function Header() {
             src={iconEditAvatar}
             alt="Edit pencil"
             className="profile__avatar-edit"
-            //onClick={() => handleOpenPopup(editAvatar)}
+            onClick={() => handleOpenPopup(editAvatar)}
           />
           <div className="profile__avatar-opacity"></div>
           <img
@@ -52,7 +97,7 @@ function Header() {
 
             <button
               className="profile__info-edit"
-             // onClick={() => handleOpenPopup(editProfile)}
+            onClick={() => handleOpenPopup(editProfile)}
             >
               <img src={iconEditProfile} alt="Edit button" />
             </button>
@@ -64,11 +109,16 @@ function Header() {
 
         <button
           className="profile__add"
-          //onClick={() => handleOpenPopup(newCardPopup)}
+          onClick={() => handleOpenPopup(newCardPopup)}
         >
           <img src={addCard} alt="Add new item" className="profile__add-img" />
         </button>
       </section>
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+        </Popup>
+      )}
     </header>
   );
 }

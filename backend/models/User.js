@@ -9,6 +9,7 @@ const userJoiSchema = Joi.object({
   avatar: Joi.string().uri().pattern(/\.(jpg|jpeg|png|gif)$/i),
 });
 
+
 const userSchema = new mongoose.Schema({
    email: {
     type: String,
@@ -37,7 +38,8 @@ const userSchema = new mongoose.Schema({
     type:String,
     default: "https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg",
     validate: {
-      validator: (v) => /^https?:\/\/.+\..+/.test(v), 
+      validator: function(v) {
+        return /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/.test(v); }, 
       message: props => `${props.value} is not a valid URL!`
     }
   }

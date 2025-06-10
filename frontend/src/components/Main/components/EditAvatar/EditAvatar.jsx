@@ -1,18 +1,27 @@
-import { useContext, useRef } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import { useContext, useRef, useState } from "react";
+import { UserContext } from "../../../../contexts/UserContext";
 
 function EditAvatar({ onSubmitSuccess }) {
-  const { handleUpdateAvatar } = useContext(CurrentUserContext);
+  const { handleUpdateAvatar } = useContext(UserContext);
   const avatarRef = useRef();
+    const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    handleUpdateAvatar(
-      {
-        avatar: avatarRef.current.value,
-      },
-      onSubmitSuccess
-    );
+    console.log({avatar: avatarRef.current.value});
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await handleUpdateAvatar(
+      { avatar: avatarRef.current.value }, onSubmitSuccess);
+    } catch (error){
+      setError(error.message || "failed to updateAvatar");
+      console.error("Avatar update error:", error);
+    }finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -34,9 +43,11 @@ function EditAvatar({ onSubmitSuccess }) {
         />
         <span className="popup__error" id="input-url-error"></span>
       </label>
+      {error && <p className="popup__error-message">{error}</p>}
 
-      <button className="popup__button_add popup__submit-btn" type="submit">
-        Guardar
+      <button className="popup__button_add popup__submit-btn" type="submit" disabled={isLoading}
+      >
+        {isLoading ? 'Guardando...' : 'Guardar'}
       </button>
     </form>
   );

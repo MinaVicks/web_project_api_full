@@ -1,10 +1,8 @@
 import deleteCard from "../../../../assets/images/trash.svg";
-import { useContext } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext.js";
 
 export default function Card({ card, onImageClick, onCardLike, onCardDelete }) {
-  const { name, link, isLiked } = card;
-  const { currentUser } = useContext(CurrentUserContext);
+  const { title, link, isLiked } = card;
+  
 
   return (
     <div className="elements__item">
@@ -20,11 +18,11 @@ export default function Card({ card, onImageClick, onCardLike, onCardDelete }) {
       <img
         className="elements__image"
         src={link}
-        alt={name}
+        alt={title}
         onClick={() => onImageClick(card)}
       />
       <div className="elements__description">
-        <h2 className="elements__description-title">{name}</h2>
+        <h2 className="elements__description-title">{title}</h2>
         <button
           aria-label="Like card"
           type="button"
@@ -37,3 +35,4 @@ export default function Card({ card, onImageClick, onCardLike, onCardDelete }) {
     </div>
   );
 }
+

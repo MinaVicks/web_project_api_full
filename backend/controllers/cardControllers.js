@@ -2,16 +2,19 @@ const { Card } = require("../models/Card.js");
 
 exports.getCards = async (req, res) =>{
     try{
-        const cards = await Card.find({owner: req.user.id}).populate("owner likes");
-        
+        const cards = await Card.find({owner: req.user._id})
+         //.populate('owner') // Make sure this matches your model name
+         //.populate('likes'); // And this too
+         console.log("Cards found:", cards); 
         if (!cards || cards.length === 0) {
         return res
         .status(404)
-        .json({ message: "No hay tarjetas en la base de datos" });
+        .json({ message: "No cards found for this user" });
         }
         res.json(cards);
     }
     catch(error){
+      console.error("Error in getCards:", error);
         res.status(500).json({message:"Error al obtener cartas",
         error: error.message
     });

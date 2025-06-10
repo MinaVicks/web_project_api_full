@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import { UserContext } from "../../../../contexts/UserContext";
 
 function EditProfile({ onSubmitSuccess }) {
-  const userContext = useContext(CurrentUserContext); // Obtiene el objeto currentUser
+  const userContext = useContext(UserContext); // Obtiene el objeto currentUser
   const { currentUser, handleUpdateUser } = userContext;
 
   const [name, setName] = useState(currentUser.name); // Agrega la variable de estado para name

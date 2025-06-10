@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27017/mydb');
+    await mongoose.connect("mongodb://localhost:27017/mydb");
 
     console.log('MongoDB connected successfully');
 
@@ -12,4 +12,7 @@ const connectDB = async () => {
   }
 };
 // Export the connectDB function
+require('./models/user.js');
+require('./models/Card.js');
+
 module.exports = connectDB;

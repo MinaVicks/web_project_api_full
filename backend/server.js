@@ -20,13 +20,6 @@ connectDB();
 
 app.use("/api/auth", authRoutes);
 app.use("/api/cards", cardRoutes);
-app.get("users/me",auth, (req,res) =>{
-    res.send(`User: ${req.user.userId} `)
-} )
-
-
-
-
 
 app.get("/", (req,res) =>{
     console.log("Middleware funciono")
@@ -36,7 +29,11 @@ app.get("/api/protegida" , auth, (req, res) => {
     res.send(`User with id  ${req.user.userId} is authenticated`);
 });
 
-
+app.use(cors({
+  origin: 'http://localhost:3001',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

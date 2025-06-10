@@ -1,28 +1,33 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/images/logo.svg";
+import * as auth  from "../utils/auth";
+import { useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const { login } = useContext (UserContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const res = await fetch ("http://localhost:3001/api/auth/signin", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            },
-        body: JSON.stringify({ email, password }),
-         });
-    const data = await res.json ();
-        if(data.token){
-        localStorage.setItem("user", JSON.stringify(data.token));
-        }
-    navigate("/main");
-      };
+      try {
+        
+        console.log("Sending login request with:", { email, password });
+        const data = await auth.login (email, password);
+      
+      if (data.token) {
+        localStorage.setItem("userToken", data.token);
+        localStorage.setItem("userEmail", data.email);
+        //console.log("Stored email:", data.email);
+        login(data.email, data.token);
+        navigate("/main");
+      }
+    } catch (err) {
+       console.log(err);}
+   };
 
   
 
@@ -80,4 +85,4 @@ const Login = () => {
   );
 };
 
-export default Login
+export default Login;

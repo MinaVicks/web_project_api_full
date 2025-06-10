@@ -1,11 +1,24 @@
 const jwt = require('jsonwebtoken');
 
 const auth = (req, res, next) => {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ message: 'Access denied, no token provided' });
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader) {
+        console.log('No authorization header');
+        return res.status(401).json({ message: 'Access denied, no token provided' });
+    }
+
+    const token = authHeader.split(" ")[1];
+     if (!token) {
+        console.log('No token found in header');
+        return res.status(401).json({ message: 'Access denied, no token provided' });
+    }
+
+    console.log('Token received:', token); // Debug log
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-        req.user ={ _id:decoded.userId }; 
+        console.log('Decoded token:', decoded); // Debug log
+        req.user = { _id: decoded.userId }; 
         next(); 
     }
     catch (error) {
@@ -15,3 +28,4 @@ const auth = (req, res, next) => {
 };
 
 module.exports = auth;
+

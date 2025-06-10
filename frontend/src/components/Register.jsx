@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/images/logo.svg";
+import * as auth  from "../utils/auth";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -9,22 +10,18 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+      try{  
+        const data = await auth.register (email, password);
 
-    const res = await fetch ("http://localhost:3001/api/auth/signup", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            },
-        body: JSON.stringify({ email, password }),
-         });
-    const data = await res.json ();
         if(data.token){
-        localStorage.setItem("user", JSON.stringify(data.token));
-        }
-    navigate("/main");
-      };
+        localStorage.setItem("userToken", data.token)
+        navigate("/auth/signin");
+        } 
 
-  
+      } catch (err) {
+          console.log(err);
+        }
+  };
 
   return (
     <div className="page">

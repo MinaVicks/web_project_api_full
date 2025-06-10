@@ -1,13 +1,13 @@
 import { useState, useContext } from "react";
-import { CurrentUserContext } from "../../../../contexts/CurrentUserContext";
+import { UserContext } from "../../../../contexts/UserContext";
 
 export default function NewCard({ onSubmitSuccess }) {
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
-  const { handleAppPlaceSubmit } = useContext(CurrentUserContext);
+  const { handleAppPlaceSubmit } = useContext(UserContext);
 
-  const handleNameChange = (event) => {
-    setName(event.target.value); // Actualiza name cuando cambie la entrada
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value); // Actualiza name cuando cambie la entrada
   };
 
   const handleLinkChange = (event) => {
@@ -16,8 +16,8 @@ export default function NewCard({ onSubmitSuccess }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({ name, link });
-    handleAppPlaceSubmit({ name, link }, onSubmitSuccess);
+    console.log({ title, link });
+    handleAppPlaceSubmit({ title, link }, onSubmitSuccess);
   };
 
   return (
@@ -38,8 +38,8 @@ export default function NewCard({ onSubmitSuccess }) {
           placeholder="Title"
           required
           type="text"
-          value={name}
-          onChange={handleNameChange}
+          value={title}
+          onChange={handleTitleChange}
         />
         <span className="popup__error" id="input-place-error"></span>
       </label>
