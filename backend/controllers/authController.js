@@ -15,7 +15,6 @@ exports.register = async (req, res) => {
          res.status(400).json({ 
         message: 'Usuario no registrado',
         error: error.message, 
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
     }
 };
@@ -74,7 +73,6 @@ exports.updateAvatar = async (req, res) => {
   try {
     const { avatar } = req.body;
     
-    // Validate URL format
     const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     if (!urlRegex.test(avatar)) {
       return res.status(400).json({ message: 'Invalid avatar URL format' });

@@ -11,11 +11,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { login } = useContext (UserContext);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
       try {
-        
-        console.log("Sending login request with:", { email, password });
         const data = await auth.login (email, password);
       
       if (data.token) {

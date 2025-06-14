@@ -1,5 +1,5 @@
 import logo from "../assets/images/logo.svg";
-import avatar from "../assets/images/Avatar.png";
+//import avatar from "../assets/images/Avatar.png";
 import iconEditProfile from "../assets/images/Edit_off.svg";
 import addCard from "../assets/images/Add.svg";
 import iconEditAvatar from "../assets/images/edit_avatar.svg";
@@ -11,13 +11,15 @@ import { Link } from "react-router-dom";
 import { useContext , useState} from 'react';
 import { UserContext } from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
+import * as auth from "../utils/auth";
 
 function Header() {
-  //const {handleUpdateAvatar}= useContext(UserContext);
+  const {handleUpdateUser}= useContext(UserContext);
 
   const { userData } = useContext(UserContext);
-  const { logout } = useContext(UserContext);
+ 
   const navigate = useNavigate();
+  const isAuthenticated = auth.isAuthenticated();
   
   const [popup, setPopup] = useState(null);
 
@@ -35,11 +37,15 @@ function Header() {
 
    const editAvatar = {
     title: "Cambiar avatar",
-    children: <EditAvatar onSubmitSuccess={closePopup} />,
+    children: <EditAvatar onSubmitSuccess={() => {
+          closePopup();
+          handleUpdateUser(); 
+        }} />,
   };
 
   function handleOpenPopup(popup) {
     setPopup(popup);
+    console.log(userData.avatar)
   }
 
   function handleClosePopup() {
@@ -47,7 +53,7 @@ function Header() {
   }
 
     const handleLogout = () => {
-    logout();
+    auth.logout();
     navigate('/signin'); // Redirect to login page
   };
 
@@ -60,8 +66,8 @@ function Header() {
 
         <div className="profile__user-section">
           <div className="profile__user-mail">
-            {userData.isAuthenticated ? (
-          <p>Welcome, {userData.email}</p>
+            {isAuthenticated ? (
+          <p>Welcome, {userData?.email}</p>
         ) : (
           <p>Welcome, Guest</p>
         )}
@@ -83,16 +89,17 @@ function Header() {
           />
           <div className="profile__avatar-opacity"></div>
           <img
-            src={avatar}
+            src={userData?.avatar }
             alt="Profile picture"
             className="profile__avatar"
+            key={userData?.avatar }
           />
         </div>
 
         <div className="profile__info">
           <div className="profile__info-title">
             <h1 className="profile__info-name">
-              {"Nombre"}
+              {userData?.name || "Jacques Costeau"}
             </h1>
 
             <button
@@ -103,7 +110,7 @@ function Header() {
             </button>
           </div>
           <h2 className="profile__info-subtitle">
-            { "Descripción"}
+            {userData?.about || "Explorador"}
           </h2>
         </div>
 

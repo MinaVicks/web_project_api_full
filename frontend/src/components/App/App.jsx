@@ -10,8 +10,9 @@ import Footer from '../Footer';
 import { UserProvider } from '../../contexts/UserContext.jsx';
 
 import { useState, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
 import { getCards, } from "../../utils/api";
+import ProtectedRoute from '../ProtectedRoute.jsx';
 
 function App() {
   const [cards, setCards] = useState([]);
@@ -68,7 +69,7 @@ function App() {
       <Route
       path="/main"
       element= {
-       
+       <ProtectedRoute>
         <div className="page">
                 <Header  />
                 <Main 
@@ -77,7 +78,7 @@ function App() {
                 onCardDelete={handleCardDelete} />
                 <Footer />
               </div>
-              
+              </ProtectedRoute>
       }/>
     <Route
           path="/signin"
@@ -87,7 +88,9 @@ function App() {
           path="/signup"
           element={<Register />}
         />
-    </Routes></UserProvider>
+       <Route path="*" element={<Navigate to="/signin" replace />} />
+    </Routes>
+    </UserProvider>
   );
 }
 

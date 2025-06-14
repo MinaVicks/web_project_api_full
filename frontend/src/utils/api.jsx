@@ -3,7 +3,9 @@ const BASE_URL = "http://localhost:3001/api";
 export const getCards =  async (token) => {
     
     try{
-    const res = await fetch(`${BASE_URL}/cards/cards`, {
+    token = localStorage.getItem('userToken');
+    if (!token) throw new Error('No token found');
+    const res = await fetch(`${BASE_URL}/cards`, {
       method: "GET",
       headers: {
       "Authorization": `Bearer ${token}`,
@@ -12,6 +14,9 @@ export const getCards =  async (token) => {
     });
     
     if (!res.ok) {
+      if (res.status === 400) {
+        localStorage.removeItem('userToken');
+      }
       const error = await res.json();
     throw new Error(error.message ||  "Failed to fetch cards");
     }
@@ -28,7 +33,7 @@ export const getCards =  async (token) => {
 
 export const createCard = async (title, link, token) => {
   try {
-    const res = await fetch(`${BASE_URL}/cards/cards`, {
+    const res = await fetch(`${BASE_URL}/createCards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +57,7 @@ export const createCard = async (title, link, token) => {
 
 export const getCurrentUser = async (token) => {
   try{
-    const res = await fetch(`${BASE_URL}/users/me`, {
+    const res = await fetch(`${BASE_URL}/auth/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +78,7 @@ export const getCurrentUser = async (token) => {
 
   export const updateAvatar = async (avatarData, token) => {
   try{
-    const res = await fetch(`${BASE_URL}/users/me/avatar`, {
+    const res = await fetch(`${BASE_URL}/auth/users/me/avatar`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -81,11 +86,6 @@ export const getCurrentUser = async (token) => {
         },
         body: JSON.stringify(avatarData),
        });
-       const contentType = res.headers.get('content-type');
-         if (!contentType || !contentType.includes('application/json')) {
-      const text = await res.text();
-      throw new Error(`Expected JSON but got: ${text.substring(0, 100)}...`);
-    }
     
     if (!res.ok) {
       const error = await res.json();

@@ -6,20 +6,20 @@ function EditProfile({ onSubmitSuccess }) {
   const { currentUser, handleUpdateUser } = userContext;
 
   const [name, setName] = useState(currentUser.name); // Agrega la variable de estado para name
-  const [description, setDescription] = useState(currentUser.about); // Agrega la variable de estado para description
+  const [about, setAbout] = useState(currentUser.about); // Agrega la variable de estado para description
 
   const handleNameChange = (event) => {
     setName(event.target.value); // Actualiza name cuando cambie la entrada
   };
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value); // Actualiza description cuando cambie la entrada
+  const handleAboutChange = (event) => {
+    setAbout(event.target.value); // Actualiza description cuando cambie la entrada
   };
 
   const handleSubmit = (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado del envío de formularios
 
-    handleUpdateUser({ name, about: description }, onSubmitSuccess);
+    handleUpdateUser({ name, about}, onSubmitSuccess);
   };
 
   return (
@@ -55,8 +55,8 @@ function EditProfile({ onSubmitSuccess }) {
           placeholder="Acerca de mí"
           required
           type="text"
-          value={description} // Vincula description con la entrada
-          onChange={handleDescriptionChange} // Agrega el controlador onChange
+          value={about} // Vincula description con la entrada
+          onChange={handleAboutChange} // Agrega el controlador onChange
         />
         <span className="popup__error" id="input-description-error"></span>
       </label>

@@ -13,8 +13,8 @@ const {
 router.use(auth);
 
 // Properly formatted routes
-router.get('/cards', getCards);
-router.post('/cards', createCard);
+router.get('/', getCards);
+router.post('/', createCard);
 router.delete('/:cardId', deleteCard); // Note :cardId
 router.put('/:cardId/likes', likeCard); // Note :cardId
 router.delete('/:cardId/likes', dislikeCard); // Note :cardId
