@@ -1,15 +1,17 @@
-const express = require('express');
-require ("dotenv").config();
-const cors = require ("cors");
+import express, { json } from 'express';
+import dotenv from 'dotenv';
 
-const connectDB = require('./db.js');
-const authRoutes= require('./routes/auth.js');
-const auth = require('./middleware/auth.js');
-const cardRoutes = require('./routes/cardRoutes.js');
+import cors from "cors";
 
+import connectDB from './db.js';
+import authRoutes from './routes/auth.js';
+import auth from './middleware/auth.js';
+import cardRoutes from './routes/cardRoutes.js';
+
+dotenv.config();
 const app = express();
 
-app.use(express.json());
+app.use(json());
 app.use(cors());
 
 //app.options('*', cors());

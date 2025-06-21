@@ -1,5 +1,18 @@
 const BASE_URL = "http://localhost:3001/api";
 
+
+const handleResponse = async (response) => {
+  const data = await response.json();
+  
+  if (!response.ok) {
+    const error = new Error(data.message || 'Request failed');
+    error.response = data;
+    throw error;
+  }
+  
+  return data;
+};
+
 export const login =  async (email, password) => {
     const res = await fetch(`${BASE_URL}/auth/signin`, {
       method: "POST",
@@ -9,36 +22,25 @@ export const login =  async (email, password) => {
       body: JSON.stringify({ email, password }),
     });
     
-    if (!res.ok) {
-      const error = await res.json();
-    throw new Error(error.message || "Login failed")
-    }
-    
-     const data = await res.json();
-  // Store token in localStorage
-  localStorage.setItem('userToken', data.token);
-  return data;
-  }
+     return handleResponse(response);
+  };
 
- /* export const register = async  (email, password) => {
-  return fetch(`${BASE_URL}/auth/signup`, {
-    method: "POST",
+
+export const getCurrentUser = async (token) => {
+  const response = await fetch(`${BASE_URL}/auth/users/me`, {
+    method: "GET",
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  }).then(async (res) => {
-    if (!res.ok) {
-      const err = await res.json();
-      return await Promise.reject(err); 
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
     }
-    return res.json();
   });
+  
+  return handleResponse(response);
 };
-*/
 
-export const register =async (email, password) =>{
+
+export const register = async (email, password) => {
+  try{
   const res = await fetch(`${BASE_URL}/auth/signup`, {
     method: "POST",
     headers: {
@@ -47,20 +49,26 @@ export const register =async (email, password) =>{
     },
     body: JSON.stringify({ email, password }),
   });
+  const data = await res.json();
   if (!res.ok){
     const error= await res.json();
     throw new Error (error.message || "Registration failed");
   }
 
-  return await res.json();
+  return data;
+  }  catch (error) {
+    console.error('Registration API error:', error);
+    throw error;
   }
 
-  // Add this new function
+  };
+
+  
 export const isAuthenticated = () => {
-  return !!localStorage.getItem('userToken');
+  return !!localStorage.getItem('token');
 };
 
-// Add logout function
+
 export const logout = () => {
-  localStorage.removeItem('userToken');
+  localStorage.removeItem('token');
 };

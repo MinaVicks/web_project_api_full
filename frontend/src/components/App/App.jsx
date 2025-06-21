@@ -7,10 +7,10 @@ import Main from '../Main/Main';
 import Footer from '../Footer';
 //import api from "../../utils/api";
 
-import { UserProvider } from '../../contexts/UserContext.jsx';
+import { UserProvider } from '../../contexts/UserProvider.jsx';
 
 import { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { getCards, } from "../../utils/api";
 import ProtectedRoute from '../ProtectedRoute.jsx';
 
@@ -36,20 +36,7 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /*const handleUpdateAvatar = (data, onSuccess) => {
-    (async () => {
-      const updateAvatar = await updateAvatar(data).then((newData) => {
-        setCurrentUser(newData);
-        if (onSuccess) onSuccess();
-      });
-    })();
-  };
-  value={{
-        currentUser,
-        //handleUpdateAvatar,
-      }}
-*/
-  
+
 
   const handleCardLike = (card) => {
     // Implement like functionality

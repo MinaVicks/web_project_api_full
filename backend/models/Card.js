@@ -1,14 +1,6 @@
-const mongoose = require('mongoose');
-const Joi = require('joi');
+import { Schema, model } from 'mongoose';
 
-
-const cardJoiSchema = Joi.object({
-  title: Joi.string().min(2).max(30),
-  link: Joi.string().uri().pattern(/\.(jpg|jpeg|png|gif)$/i),
-  owner: Joi.string().min(2).max(39),
-});
-
-const cardSchema = new mongoose.Schema({
+const cardSchema = new Schema({
    title: {
     type: String,
     required: true,
@@ -28,14 +20,14 @@ const cardSchema = new mongoose.Schema({
     },
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
     ref: "user",
   },
   likes: {
     type: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "likes",
       },
     ],
@@ -47,7 +39,4 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-module.exports = {
-  Card: mongoose.model('Card', cardSchema),
-  cardJoiSchema
-};
+export const Card = model('Card', cardSchema);

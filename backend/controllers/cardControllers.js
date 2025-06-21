@@ -1,50 +1,44 @@
-const { Card } = require("../models/Card.js");
+import { Card } from "../models/Card.js";
+import { successResponse, errorResponse } from '../utils/responseUtils';
 
-exports.getCards = async (req, res) =>{
+export async function getCards(req, res){
     try{
         const cards = await Card.find({owner: req.user._id})
-         //.populate('owner') // Make sure this matches your model name
+      .populate('owner', '_id name avatar')
+      .lean();
          //.populate('likes'); // And this too
          console.log("Cards found:", cards); 
-        if (!cards || cards.length === 0) {
-        return res
-        .status(404)
-        .json({ message: "No cards found for this user" });
-        }
-        res.json(cards);
-    }
-    catch(error){
-      console.error("Error in getCards:", error);
-        res.status(500).json({message:"Error al obtener cartas",
-        error: error.message
+    return successResponse(res, {
+      cards
     });
-    }
-};
 
-exports.createCard = async (req, res) =>{
-    try{
-        const {title, link} = req.body;
-         if (!title || !link) {
-            return res.status(400).json({ message: "Campo requerido" });
-        }
-         const newCard = await Card.create({
-      title,
-      link,
-      owner: req.user._id,
-      likes: [],
-    });
-    res.status(201).json(newCard);
-        // await newCard.save();
-    }
-    catch(error){
-    res.status(500).json({ 
-      message: "Error creating card",
-      error: error.message 
-    });
+  } catch(error) {
+    return errorResponse(res, 'Error getting cards', 500, error);
   }
 }
 
-exports.deleteCard = async (req, res) =>{
+export async function createCard(req, res){
+    try{
+        const {title, link} = req.body;
+         if (!title || !link) {
+            return errorResponse(res, 'Title and link are required', 400);
+        }
+
+      const newCard = await Card.create({
+      title,
+      link,
+      owner: req.user._id
+    });
+    return successResponse(res, {
+      card: newCard
+    }, 201);
+    }
+    catch(error){
+    return errorResponse(res, 'Error creating card', 500, error);
+  }
+}
+
+export async function deleteCard(req, res){
      try {
     const { cardId } = req.params;
     const userId = req.user._id;
@@ -61,9 +55,9 @@ exports.deleteCard = async (req, res) =>{
     }
     res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
   }
-};
+}
 
-exports.likeCard = async (req, res) =>{
+export async function likeCard(req, res){
     try{
      const card = await Card.findByIdAndUpdate(
       req.params.cardId,
@@ -77,7 +71,7 @@ exports.likeCard = async (req, res) =>{
     }
 }
 
-exports.dislikeCard = async (req, res) =>{
+export async function dislikeCard(req, res){
     try{
     const card = await Card.findByIdAndUpdate(
     req.params.cardId,

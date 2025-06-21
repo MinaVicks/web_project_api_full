@@ -1,16 +1,7 @@
-const mongoose = require('mongoose');
-const Joi = require('joi');
-
-const userJoiSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  name: Joi.string().min(2).max(39),
-  about: Joi.string().min(2).max(39),
-  avatar: Joi.string().uri().pattern(/\.(jpg|jpeg|png|gif)$/i),
-});
+import { Schema, model } from 'mongoose';
 
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
    email: {
     type: String,
     required: true,
@@ -44,6 +35,6 @@ const userSchema = new mongoose.Schema({
     }
   }
 
-});
+},{ timestamps: true });
 
-module.exports ={ User: mongoose.model('User', userSchema), userJoiSchema};
+export const User = model('user', userSchema);

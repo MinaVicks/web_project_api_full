@@ -1,34 +1,28 @@
 const BASE_URL = "http://localhost:3001/api";
 
-export const getCards =  async (token) => {
-    
-    try{
-    token = localStorage.getItem('userToken');
-    if (!token) throw new Error('No token found');
-    const res = await fetch(`${BASE_URL}/cards`, {
-      method: "GET",
-      headers: {
+const handleResponse = async (response) => {
+  const data = await response.json();
+  
+  if (!response.ok) {
+    const error = new Error(data.message || 'Request failed');
+    error.response = data;
+    throw error;
+  }
+  
+  return data;
+};
+
+export const getCards = async (token) => {
+  const response = await fetch(`${BASE_URL}/cards`, {
+    method: "GET",
+    headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     }
-    });
-    
-    if (!res.ok) {
-      if (res.status === 400) {
-        localStorage.removeItem('userToken');
-      }
-      const error = await res.json();
-    throw new Error(error.message ||  "Failed to fetch cards");
-    }
-    
-    return await res.json();
-  } catch (err) {
-    
-    console.error("API call failed:", err);
-    
-    throw err;
-  }
-}
+  });
+  
+  return handleResponse(response);
+};
 
 
 export const createCard = async (title, link, token) => {
@@ -54,27 +48,31 @@ export const createCard = async (title, link, token) => {
   }
 }
 
-
+/*
 export const getCurrentUser = async (token) => {
-  try{
-    const res = await fetch(`${BASE_URL}/auth/users/me`, {
+   try {
+    const response = await fetch(`${BASE_URL}/auth/users/me`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, 
-        }
-       });
-    
-    if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Failed to get User Information");
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user");
     }
-    return await res.json();
-  } catch (err) {
-    console.error("get User Information error:", err);
-    throw err; 
+
+    const data = await response.json();
+    console.log('API User Data:', data); // Debug log
+    return data;
+    
+  } catch (error) {
+    console.error("Failed to get user:", error);
+    throw error;
   }
-  }
+ 
+  };*/
 
   export const updateAvatar = async (avatarData, token) => {
   try{

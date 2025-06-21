@@ -1,7 +1,7 @@
-const express = require('express');
-const {register,login, getCurrentUser, updateAvatar} = require('../controllers/authcontroller.js');
-const router = express.Router();
-const auth = require("../middleware/auth.js")
+import { Router } from 'express';
+import { register, login, getCurrentUser, updateAvatar } from '../controllers/authcontroller.js';
+const router = Router();
+import auth from "../middleware/auth.js";
 
 router.post("/signup", register);
 router.post("/signin", login);
@@ -10,4 +10,4 @@ router.patch('/users/me/avatar', auth, updateAvatar);
 
 
 
-module.exports = router;
+export default router;

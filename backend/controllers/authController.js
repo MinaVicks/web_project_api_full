@@ -1,75 +1,111 @@
-const {User} = require('../models/user.js');
+import { User } from '../models/user.js';
+import { successResponse, errorResponse } from '../utils/responseUtils';
+import { hash as _hash, compare } from 'bcryptjs';
+import pkg from 'jsonwebtoken';
+const { sign } = pkg;
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-exports.register = async (req, res) => {
+export async function register(req, res) {
+  
     const { email, password } = req.body;
 
     try {
-        const hash = await bcrypt.hash(password, 10);
+        const hash = await _hash(password, 10);
         const user = await User.create({email, password: hash});
-        res.status(201).json({ message: 'User registered successfully', userId: user._id });
-    }
-    catch (error) {
-         res.status(400).json({ 
-        message: 'Usuario no registrado',
-        error: error.message, 
-    });
-    }
-};
+        const token = sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
 
-exports.login = async (req,res) => {
+    return successResponse(res, {
+      message: 'User registered successfully',
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar
+      }
+    }, 201);
+
+    } catch (error) {
+         if (error.code === 11000) {
+            return res.status(400).json({
+                message: 'Email already exists',
+                error: 'DUPLICATE_EMAIL'
+            });
+        }
+        
+        
+        res.status(400).json({
+            message: 'Registration failed',
+            error: error.message
+        });
+    }
+}
+
+export async function login(req,res) {
     const {email, password} = req.body;
     try{
         const user = await User.findOne({email}).select('+password');
         if(!user){
-            return res.status(401).json({error: "Credenciales Invalidas"})
+            return errorResponse(res, 'Invalid credentials', 401);
         }
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await compare(password, user.password)
         if(!isMatch){
-            return res.status(401).json({error:"Credenciales invalidas"})
+            return errorResponse(res, 'Invalid credentials', 401);
         }
-       const generateToken = (userId) => {
-        return jwt.sign(
-             { userId },
-             process.env.JWT_SECRET,
-                { expiresIn: '7d' } 
-            );
-        };
-        res.json({ 
-            token: generateToken(user._id),
-            email: user.email
-         });
+       const token = sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
-         console.log("Login response:", { 
-            token: generateToken(user._id),
-            email: user.email
-        });
+    return successResponse(res, {
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar
+      }
+    });
 
 
 
     }catch(error){
-    res.status(500).json({error:"Credenciales invalidas"});
+    return errorResponse(res, 'Login failed', 500, error);
     }
-};
+}
 
-exports.getCurrentUser = async (req, res) => {
+export async function getCurrentUser(req, res) {
   try {
     
-    const user = await User.findById(req.user._id).select('-password'); 
+    const user = await User.findById(req.user._id)
+    .select('-password -__v') // Exclude sensitive/unneeded fields
+    .lean(); // Convert to plain JS object
+ 
     
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return errorResponse(res, 'User not found', 404);
     }
-    
-    res.json(user);
+    return successResponse(res, {
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching user data' });
+    return errorResponse(res, 'Error fetching user data', 500, error);
   }
-};
+}
 
-exports.updateAvatar = async (req, res) => {
+export async function updateAvatar(req, res) {
   try {
     const { avatar } = req.body;
     
@@ -93,4 +129,4 @@ exports.updateAvatar = async (req, res) => {
     console.error('Avatar update error:', error);
     res.status(500).json({ message: 'Error updating avatar', error: error.message });
   }
-};
+}

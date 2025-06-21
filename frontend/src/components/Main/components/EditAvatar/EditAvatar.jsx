@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
-import { UserContext } from "../../../../contexts/UserContext";
+import UserContext from "../../../../contexts/UserContext";
 
-function EditAvatar() {
+function EditAvatar({ onSubmitSuccess }) {
   const { handleUpdateAvatar } = useContext(UserContext);
   const avatarRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
@@ -10,7 +10,8 @@ function EditAvatar() {
   async function handleSubmit(e) {
     e.preventDefault();
     console.log({avatar: avatarRef.current.value});
-
+setIsLoading(true);
+    setError(null);
     try {
       await handleUpdateAvatar(
       { avatar: avatarRef.current.value }

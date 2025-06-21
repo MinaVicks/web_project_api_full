@@ -2,30 +2,67 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import logo from "../assets/images/logo.svg";
 import * as auth  from "../utils/auth";
+import SuccessPopup from "../components/InfoToolTip/successPopup/successPopup.jsx"
+import FailPopup from "../components/InfoToolTip/FailPopup/FailPopup.jsx"
 
 const Register = () => {
+  const [showSuccessPopup, setShowSuccessPopup] = useState(null);
+  const [showFailPopup, setShowFailPopup] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+    const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
       try{  
-        const data = await auth.register (email, password);
-
-        if(data.token){
-        localStorage.setItem("userToken", data.token)
-        navigate("/auth/signin");
-        } 
-
+        const response = await auth.register (data.email, data.password);
+        if(response.userId){
+        //localStorage.setItem("userToken", response.token)
+        setShowSuccessPopup(true);
+        //navigate("/auth/signin");
+        //login(response.token, { email: response.email });
+         } 
       } catch (err) {
+          setShowFailPopup(true);
+          
           console.log(err);
         }
   };
 
+  const handlePopupCloseSuccess = () => {
+    setShowSuccessPopup(false);
+    navigate("/signin");
+  };
+  const handlePopupClose = () => {
+    setShowFailPopup(false);
+  };
+
   return (
     <div className="page">
+
+      <SuccessPopup
+        isOpen={showSuccessPopup}
+        onClose={handlePopupCloseSuccess}
+      ></SuccessPopup>
+
+      <FailPopup isOpen={showFailPopup} onClose={handlePopupClose}>
+
+      </FailPopup>
      
       <div className="login__header">
         <img src={logo} alt="Logo Around The US" className="login__logo" />
@@ -46,8 +83,8 @@ const Register = () => {
             type="email"
             placeholder="Correo electrónico"
             className="login__input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={data.email}
+            onChange={handleChange}
           />
 
           <input
@@ -56,8 +93,8 @@ const Register = () => {
             type="password"
             placeholder="Contraseña"
             className="login__input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={data.password}
+            onChange={handleChange}
         />
           <div className="login__button-container">
             <button type="submit" className="login__link">
