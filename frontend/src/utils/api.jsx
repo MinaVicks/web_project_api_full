@@ -12,22 +12,31 @@ const handleResponse = async (response) => {
   return data;
 };
 
+
+
 export const getCards = async (token) => {
-  const response = await fetch(`${BASE_URL}/cards`, {
+  const response = await fetch(`${BASE_URL}/cards/getCards`, {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     }
   });
+  const data = await response.json();
   
-  return handleResponse(response);
+  
+  if (!Array.isArray(data.cards)) {
+    console.error('Expected cards array, got:', data);
+    return []; // Return empty array as fallback
+  }
+  
+  return data.cards;
 };
 
 
 export const createCard = async (title, link, token) => {
   try {
-    const res = await fetch(`${BASE_URL}/createCards`, {
+    const res = await fetch(`${BASE_URL}/cards/createCards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,7 +108,7 @@ export const getCurrentUser = async (token) => {
 
     export const updateUserInformation = async (body, token) => {
   try{
-    const res = await fetch(`${BASE_URL}/users/me`, {
+    const res = await fetch(`${BASE_URL}/auth/users/me`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

@@ -1,20 +1,26 @@
-import { Navigate } from "react-router-dom";
+import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { getCurrentUser } from '../utils/auth';
 
 const ProtectedRoute = ({ children }) => {
-  // 1. Define the auth check function
-  const checkAuth = () => {
-    const token = localStorage.getItem('userToken');
-    return !!token; // Returns true if token exists
-  };
+  const token = localStorage.getItem('userToken');
 
-  // 2. Call the function to get the auth status
-  const isAuthenticated = checkAuth();
+  useEffect(() => {
+    // Verify token on mount
+    const verifyToken = async () => {
+      try {
+        await getCurrentUser(token);
+      } catch (err) {
+        localStorage.removeItem('userToken');
+      }
+    };
+    verifyToken();
+  }, [token]);
 
-  // 3. Debug log (optional)
-  console.log('ProtectedRoute - isAuthenticated:', isAuthenticated);
+  if (!token) {
+    return <Navigate to="/signin" replace />;
+  }
 
-  // 4. Return either children or redirect
-  return isAuthenticated ? children : <Navigate to="/signin" replace />;
+  return children;
 };
-
 export default ProtectedRoute;

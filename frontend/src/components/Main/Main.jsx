@@ -29,6 +29,7 @@ useEffect(() => {
       }
     } catch (err) {
       setError(err.message);
+      setCards([]);
     } finally {
       setIsLoading(false);
     }
@@ -53,15 +54,18 @@ useEffect(() => {
   return (
     <main className="elements">
       <div className="elements__container">
-        {cards.map((card) => (
-          <Card
-            key={card._id}
-            card={card}
-            onImageClick={handleImageClick}
-            onCardLike={onCardLike}
-            onCardDelete={onCardDelete}
-          />
-        ))}
+        {cards.length > 0 ? (
+          cards.map((card) => (
+            <Card
+              key={card._id}
+              card={card}
+              onCardLike={onCardLike}
+              onCardDelete={onCardDelete}
+            />
+          ))
+        ) : (
+          <p>No cards found</p>
+        )}
       </div>
       {activePopup === "image" && selectedCard && (
         <Popup onClose={closeAllPopups}>

@@ -1,5 +1,5 @@
 import { User } from '../models/user.js';
-import { successResponse, errorResponse } from '../utils/responseUtils';
+import { successResponse, errorResponse } from '../utils/ResponseUtils.js';
 import { hash as _hash, compare } from 'bcryptjs';
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
@@ -46,21 +46,27 @@ export async function register(req, res) {
 }
 
 export async function login(req,res) {
-    const {email, password} = req.body;
+
     try{
+        const {email, password} = req.body;
         const user = await User.findOne({email}).select('+password');
         if(!user){
             return errorResponse(res, 'Invalid credentials', 401);
         }
         const isMatch = await compare(password, user.password)
         if(!isMatch){
-            return errorResponse(res, 'Invalid credentials', 401);
+            return errorResponse(res, 'password not matching', 401);
         }
        const token = sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+
+        // In your authController.js login function
+console.log('Login attempt for:', email);
+console.log('User found:', user); // Should show the user document
+console.log('Password match:', isMatch); // Should be tru
 
     return successResponse(res, {
       token,

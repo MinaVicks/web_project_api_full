@@ -31,12 +31,12 @@ const Register = () => {
     e.preventDefault();
       try{  
         const response = await auth.register (data.email, data.password);
-        if(response.userId){
+        if(response.success || response.userId){
         //localStorage.setItem("userToken", response.token)
         setShowSuccessPopup(true);
         //navigate("/auth/signin");
         //login(response.token, { email: response.email });
-         } 
+        } 
       } catch (err) {
           setShowFailPopup(true);
           

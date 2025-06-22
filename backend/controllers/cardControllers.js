@@ -1,5 +1,6 @@
 import { Card } from "../models/Card.js";
-import { successResponse, errorResponse } from '../utils/responseUtils';
+import { successResponse } from "../utils/ResponseUtils.js";
+import { errorResponse } from "../utils/ResponseUtils.js";
 
 export async function getCards(req, res){
     try{
