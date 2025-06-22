@@ -5,10 +5,10 @@ import ImagePopup from "./components/ImagePopup/ImagePopup";
 import {getCards} from "../../utils/api";
 import UserContext from "../../contexts/UserContext";
 
-function Main({ cards, onCardLike, onCardDelete }) {
+function Main({ onCardLike, onCardDelete }) {
   const [activePopup, setActivePopup] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [card, setCards] = useState([]);
+  const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(UserContext);
@@ -19,26 +19,40 @@ useEffect(() => {
   const fetchCards = async () => {
     try {
       setIsLoading(true);
+      setError(null);
       const token = localStorage.getItem('userToken');
+
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+
       const response = await getCards(token);
+
+      console.log('API Response:', response);
       
-      if (response.success) {
-        setCards(response.cards);
-      } else {
-        setError(response.message || 'Failed to load cards on Main');
-      }
-    } catch (err) {
-       console.error('Failed to fetch cards:', {
+        if (!response) {
+          throw new Error('No response received from server');
+        }
+
+        const cardsData = response.cards || response.data || response;
+
+        if (!Array.isArray(cardsData)) {
+          throw new Error('Invalid cards data format');
+        }
+
+        setCards(cardsData);
+
+      } catch (err) {
+        console.error('Card fetch error:', {
           error: err,
           message: err.message,
-          user: user,
           time: new Date().toISOString()
         });
-      setError(err.message);
-      setCards([]);
-    } finally {
-      setIsLoading(false);
-    }
+        setError(err.message || 'Failed to load cards');
+        setCards([]);
+      } finally {
+        setIsLoading(false);
+      }
   };
 
   if (user) fetchCards();
@@ -71,6 +85,7 @@ useEffect(() => {
             <Card
               key={card._id}
               card={card}
+              onImageClick={handleImageClick}
               onCardLike={onCardLike}
               onCardDelete={onCardDelete}
             />
