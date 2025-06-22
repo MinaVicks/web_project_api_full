@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { register, login, getCurrentUser, updateAvatar } from '../controllers/authcontroller.js';
-const router = Router();
 import auth from "../middleware/auth.js";
+
+
+
+const router = Router();
+
 
 router.post("/signup", register);
 router.post("/signin", login);

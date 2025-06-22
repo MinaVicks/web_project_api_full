@@ -25,9 +25,15 @@ useEffect(() => {
       if (response.success) {
         setCards(response.cards);
       } else {
-        setError(response.message || 'Failed to load cards');
+        setError(response.message || 'Failed to load cards on Main');
       }
     } catch (err) {
+       console.error('Failed to fetch cards:', {
+          error: err,
+          message: err.message,
+          user: user,
+          time: new Date().toISOString()
+        });
       setError(err.message);
       setCards([]);
     } finally {
@@ -39,7 +45,13 @@ useEffect(() => {
 }, [user]);
 
   if (isLoading) return <div>Loading cards...</div>;
-  if (error) return <div>Error loading cards: {error}</div>;
+  if (error) return (
+    <div className="error-message">
+      <p>Error loading cards: {error}</p>
+      <button onClick={() => window.location.reload()}>Retry</button>
+    </div>
+  );
+
 
   function handleImageClick(card) {
     setSelectedCard(card);

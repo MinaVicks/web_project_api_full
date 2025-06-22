@@ -15,6 +15,7 @@ const handleResponse = async (response) => {
 
 
 export const getCards = async (token) => {
+  try{
   const response = await fetch(`${BASE_URL}/cards/getCards`, {
     method: "GET",
     headers: {
@@ -22,6 +23,15 @@ export const getCards = async (token) => {
       "Content-Type": "application/json"
     }
   });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(
+        errorData?.message || 
+        `HTTP ${response.status}: ${response.statusText}`
+      );
+    }
+
   const data = await response.json();
   
   
@@ -31,6 +41,15 @@ export const getCards = async (token) => {
   }
   
   return data.cards;
+  } catch (error) {
+    console.error('API Error - getCards:', {
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
+    throw new Error(`Failed to load cards on api: ${error.message}`);
+  }
+  
 };
 
 
