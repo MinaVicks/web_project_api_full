@@ -71,10 +71,10 @@ export const register = async (email, password) => {
 
   
 export const isAuthenticated = () => {
-  return !!localStorage.getItem('token');
+  return !!localStorage.getItem('userToken');
 };
 
 
 export const logout = () => {
-  localStorage.removeItem('token');
+  localStorage.removeItem('userToken');
 };
