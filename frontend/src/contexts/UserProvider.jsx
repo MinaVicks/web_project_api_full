@@ -69,6 +69,8 @@ const handleUpdateUser = useCallback(async (userData) => {
     const token = localStorage.getItem('userToken');
     const updatedUser = await api.updateUserInformation(userData, token);
     setUser(prev => ({ ...prev, ...updatedUser }));
+    
+    console.log('Response:', updatedUser);
     return updatedUser;
   } catch (error) {
     console.error('User update failed:', error);

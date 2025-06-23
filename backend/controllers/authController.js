@@ -1,14 +1,30 @@
 import { User } from '../models/user.js';
+
+import { 
+  BadRequestError, 
+  ConflictError, 
+  NotFoundError 
+} from '../utils/errorUtils.js';
+
 import { successResponse, errorResponse } from '../utils/ResponseUtils.js';
 import { hash as _hash, compare } from 'bcryptjs';
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
 
-export async function register(req, res) {
+export async function register (req, res, next) {
   
     const { email, password } = req.body;
 
     try {
+        if (!email || !password) {
+        throw new BadRequestError('Email y contraseña son requeridos');
+        }
+
+        const existingUser = await User.findOne({ email });
+           if (existingUser) {
+            throw new ConflictError();
+             }
+
         const hash = await _hash(password, 10);
         const user = await User.create({email, password: hash});
         const token = sign(
@@ -17,56 +33,45 @@ export async function register(req, res) {
             { expiresIn: '7d' }
         );
 
-    return successResponse(res, {
-      message: 'User registered successfully',
-      token,
-      user: {
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar
-      }
-    }, 201);
+        return successResponse(res, {
+           message: 'User registered successfully',
+           token,
+           user: {
+             _id: user._id,
+            email: user.email,
+            name: user.name,
+           about: user.about,
+           avatar: user.avatar
+         }
+        }, 201);
 
-    } catch (error) {
-         if (error.code === 11000) {
-            return res.status(400).json({
-                message: 'Email already exists',
-                error: 'DUPLICATE_EMAIL'
-            });
-        }
-        
-        
-        res.status(400).json({
-            message: 'Registration failed',
-            error: error.message
-        });
+    }  catch (err) {
+        next(err);
     }
 }
 
-export async function login(req,res) {
+export async function login(req, res, next) {
 
     try{
         const {email, password} = req.body;
+        
         const user = await User.findOne({email}).select('+password');
         if(!user){
-            return errorResponse(res, 'Invalid credentials', 401);
+            throw new BadRequestError('Se pasaron datos inválidos');
         }
         const isMatch = await compare(password, user.password)
         if(!isMatch){
-            return errorResponse(res, 'password not matching', 401);
+            throw new BadRequestError('Se pasaron datos inválidos');
         }
        const token = sign(
       { userId: user._id },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
-
-        // In your authController.js login function
-console.log('Login attempt for:', email);
-console.log('User found:', user); // Should show the user document
-console.log('Password match:', isMatch); // Should be tru
+        
+      console.log('Login attempt for:', email);
+      console.log('User found:', user); 
+      console.log('Password match:', isMatch); 
 
     return successResponse(res, {
       token,
@@ -76,26 +81,23 @@ console.log('Password match:', isMatch); // Should be tru
         name: user.name,
         about: user.about,
         avatar: user.avatar
-      }
-    });
+        }
+      });
 
-
-
-    }catch(error){
-    return errorResponse(res, 'Login failed', 500, error);
+  }catch(error){
+    next(error);
     }
 }
 
-export async function getCurrentUser(req, res) {
+export async function getCurrentUser(req, res, next) {
   try {
     
     const user = await User.findById(req.user._id)
-    .select('-password -__v') // Exclude sensitive/unneeded fields
-    .lean(); // Convert to plain JS object
+    .select('-password -__v')
+    .lean();
  
-    
     if (!user) {
-      return errorResponse(res, 'User not found', 404);
+      throw new NotFoundError('No se encontró el recurso solicitado');
     }
     return successResponse(res, {
       user: {
@@ -107,11 +109,11 @@ export async function getCurrentUser(req, res) {
       }
     });
   } catch (error) {
-    return errorResponse(res, 'Error fetching user data', 500, error);
+     next(error);
   }
 }
 
-export async function updateAvatar(req, res) {
+export async function updateAvatar(req, res, next) {
   try {
     const { avatar } = req.body;
     
@@ -127,12 +129,34 @@ export async function updateAvatar(req, res) {
     ).select('-password');
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new NotFoundError('No se encontró el recurso solicitado');
     }
 
     res.json(updatedUser);
   } catch (error) {
-    console.error('Avatar update error:', error);
-    res.status(500).json({ message: 'Error updating avatar', error: error.message });
+    next(error);
+  }
+}
+
+export async function updateProfile(req, res, next) {
+  try {
+        const { name, about } = req.body;
+    if (!name || !about) {
+      throw new BadRequestError('Nombre y descripción son requeridos');
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { name, about },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      throw new NotFoundError('Usuario no encontrado');
+    }
+
+    res.json(updatedUser);
+  } catch (err) {
+    next(err);
   }
 }

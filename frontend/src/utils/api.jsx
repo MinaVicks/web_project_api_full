@@ -96,16 +96,16 @@ export const updateAvatar = async (avatarData, token) => {
 };
 
 export const updateUserInformation = async (body, token) => {
-  try{
-    const res = await fetch(`${BASE_URL}/auth/users/me`, {
+  try {
+    const res = await fetch(`${BASE_URL}/auth/users/me`, {  
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`, 
-        },
-        body: JSON.stringify(body),
-       })
-    
+      },
+      body: JSON.stringify(body),
+    });
+
     if (!res.ok) {
       const error = await res.json();
       throw new Error(error.message || "Failed to update User");

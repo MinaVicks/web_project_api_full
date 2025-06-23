@@ -1,28 +1,33 @@
 import { Card } from "../models/Card.js";
 import { successResponse } from "../utils/ResponseUtils.js";
-import { errorResponse } from "../utils/ResponseUtils.js";
 
-export async function getCards(req, res){
+import { 
+  BadRequestError, 
+  ForbiddenError, 
+  NotFoundError 
+} from '../utils/errorUtils.js';
+
+export async function getCards(req, res, next){
     try{
         const cards = await Card.find({owner: req.user._id})
       .populate('owner', '_id name avatar')
       .lean();
-         //.populate('likes'); // And this too
-         console.log("Cards found:", cards); 
+        
+    console.log("Cards found:", cards); 
     return successResponse(res, {
       cards
     });
 
-  } catch(error) {
-    return errorResponse(res, 'Error getting cards', 500, error);
-  }
-}
+  } catch (err) {
+    next(err);
+    }
+};
 
-export async function createCard(req, res){
+export async function createCard(req, res, next){
     try{
         const {title, link} = req.body;
          if (!title || !link) {
-            return errorResponse(res, 'Title and link are required', 400);
+            throw new BadRequestError('Nombre y enlace son requeridos');
         }
 
       const newCard = await Card.create({
@@ -33,32 +38,35 @@ export async function createCard(req, res){
     return successResponse(res, {
       card: newCard
     }, 201);
+    } catch (err) {
+    next(err);
     }
-    catch(error){
-    return errorResponse(res, 'Error creating card', 500, error);
-  }
-}
 
-export async function deleteCard(req, res){
+};
+
+export async function deleteCard(req, res, next){
      try {
     const { cardId } = req.params;
     const userId = req.user._id;
 
-    const card = await Card.findById(cardId).orFail(
-      new Error("No se ha encontrado ninguna tarjeta con esa id")
-    );
+    const card = await Card.findById(cardId).orFail(() => {
+      throw new NotFoundError('Tarjeta no encontrada');
+    });
+
+    if (card.owner.toString() !== userId) {
+      throw new ForbiddenError();
+    }
 
     await Card.findByIdAndDelete(cardId);
     res.json({ message: "Tarjeta eliminada" });
-  } catch (error) {
-    if (error.kind === "ObjectId") {
-      return res.status(404).json({ message: "Id Invalido" });
-    }
-    res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
-  }
-}
 
-export async function likeCard(req, res){
+  } catch (err) {
+    next(err);
+  }
+
+};
+
+export async function likeCard( req, res, next){
     try{
      const card = await Card.findByIdAndUpdate(
       req.params.cardId,
@@ -67,12 +75,12 @@ export async function likeCard(req, res){
     );
     res.json(card);
     }
-    catch(err){
-        res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
-    }
-}
+      catch (err) {
+        next(err);
+     }
+};
 
-export async function dislikeCard(req, res){
+export async function dislikeCard(req, res, next){
     try{
     const card = await Card.findByIdAndUpdate(
     req.params.cardId,
@@ -80,8 +88,7 @@ export async function dislikeCard(req, res){
     { new: true }
   );
   res.json(card);
-    }
-    catch(err){
-        res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
-    }
-}
+    } catch (err) {
+    next(err);
+  }
+};

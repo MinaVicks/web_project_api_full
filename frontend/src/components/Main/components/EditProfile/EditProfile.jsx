@@ -8,6 +8,9 @@ function EditProfile({ onSubmitSuccess }) {
   const [name, setName] = useState(user.name); // Agrega la variable de estado para name
   const [about, setAbout] = useState(user.about); // Agrega la variable de estado para description
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleNameChange = (event) => {
     setName(event.target.value); // Actualiza name cuando cambie la entrada
   };
@@ -16,10 +19,18 @@ function EditProfile({ onSubmitSuccess }) {
     setAbout(event.target.value); // Actualiza description cuando cambie la entrada
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado del envío de formularios
-
-    handleUpdateUser({ name, about}, onSubmitSuccess);
+    setIsLoading(true);
+    setError(null);
+    try{
+    handleUpdateUser({ name, about});
+     onSubmitSuccess();
+    }catch (err){
+      setError(err.message || "Failed to update");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -58,11 +69,15 @@ function EditProfile({ onSubmitSuccess }) {
           value={about} // Vincula description con la entrada
           onChange={handleAboutChange} // Agrega el controlador onChange
         />
-        <span className="popup__error" id="input-description-error"></span>
+        {error && <span className="popup__error" id="input-description-error">{error}</span>}
       </label>
 
-      <button className="popup__button_add popup__submit-btn" type="submit">
-        Guardar
+       <button 
+        className="popup__button_add popup__submit-btn" 
+        type="submit"
+        disabled={isLoading}
+      >
+        {isLoading ? 'Guardando...' : 'Guardar'}
       </button>
     </form>
   );
