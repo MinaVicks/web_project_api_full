@@ -1,8 +1,10 @@
 import deleteCard from "../../../../assets/images/trash.svg";
 
-export default function Card({ card, onImageClick, onCardLike, onCardDelete }) {
-  const { title, link, isLiked } = card;
+export default function Card({ card, onImageClick, onCardLike, onCardDelete, currentUser }) {
+  const { title, link } = card;
   
+  const isOwn = currentUser && card.owner === currentUser._id;
+  const isLiked = currentUser && card.likes.some(id => id === currentUser._id);
 
   return (
     <div className="elements__item">

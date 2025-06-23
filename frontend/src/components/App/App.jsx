@@ -1,30 +1,30 @@
 /* eslint-disable no-unused-vars */
-
 import Login from '../Login';
 import Register from '../Register';
 import Header from '../Header';
 import Main from '../Main/Main';
 import Footer from '../Footer';
-//import api from "../../utils/api";
 
 import { UserProvider } from '../../contexts/UserProvider.jsx';
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { getCards, } from "../../utils/api";
 import ProtectedRoute from '../ProtectedRoute.jsx';
+import * as api  from "../../utils/api.jsx";
+
+import UserContext from '../../contexts/UserContext.jsx';
 
 function App() {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+  //const [currentUser, setCurrentUser] = useState(null);
+  //const { user: currentUser } = useContext(UserContext);
   
 
-   useEffect(() => {
+  /* useEffect(() => {
     const fetchCards = async () => {
       try {
         const token = localStorage.getItem('userToken');
-        const cardsData = await getCards(token);
+        const cardsData = await api.getCards(token);
         setCards(cardsData);
       } catch (err) {
         setError(err.message);
@@ -35,19 +35,39 @@ function App() {
     fetchCards();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+*/
 
 
+  async function handleCardLike (card,isLiked)  {
+    
+  const token = localStorage.getItem('userToken'); 
 
-  const handleCardLike = (card) => {
-    // Implement like functionality
+  try {
+    const updatedCard = await api.changeLikeCardStatus(card._id, !isLiked, token);
+    return updatedCard;
+  
+  } catch (error) {
+    console.error('Error updating like:', error);
+  }
     console.log('Liked card:', card);
   };
 
-  const handleCardDelete = (card) => {
-    // Implement delete functionality
-    console.log('Deleted card:', card);
-  };
+async function handleCardDelete(card) {
+  const token = localStorage.getItem('userToken');
+  
+  if (!window.confirm('Are you sure you want to delete this card?')) {
+    return false;
+  }
 
+  try {
+    await api.deleteCard(card._id, token);
+    setCards(prevCards => prevCards.filter(c => c._id !== card._id));
+    return true;
+  } catch (error) {
+    console.error('Error deleting card:', error);
+    return false;
+  }
+}
 
 
   return (

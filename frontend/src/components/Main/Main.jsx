@@ -77,6 +77,27 @@ useEffect(() => {
     setSelectedCard(null);
   };
 
+    const handleCardLike = async (card) => {
+      const isLiked = card.likes.some(id => id === user._id);
+    try {
+      const updatedCard = await onCardLike(card, isLiked);
+      setCards(prevCards => 
+        prevCards.map(c => 
+          c._id === card._id ? updatedCard : c
+        )
+      );
+    } catch (error) {
+      console.error('Failed to update like:', error);
+    }
+  };
+
+  const handleCardDelete = async (card) => {
+  const success = await onCardDelete(card);
+  if (success) {
+    setCards(prevCards => prevCards.filter(c => c._id !== card._id));
+  }
+};
+
   return (
     <main className="elements">
       <div className="elements__container">
@@ -85,9 +106,10 @@ useEffect(() => {
             <Card
               key={card._id}
               card={card}
+              currentUser={user}
               onImageClick={handleImageClick}
-              onCardLike={onCardLike}
-              onCardDelete={onCardDelete}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
             />
           ))
         ) : (

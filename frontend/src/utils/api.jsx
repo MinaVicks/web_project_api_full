@@ -12,8 +12,6 @@ const handleResponse = async (response) => {
   return data;
 };
 
-
-
 export const getCards = async (token) => {
   try{
   const response = await fetch(`${BASE_URL}/cards/getCards`, {
@@ -52,7 +50,6 @@ export const getCards = async (token) => {
   
 };
 
-
 export const createCard = async (title, link, token) => {
   try {
     const res = await fetch(`${BASE_URL}/cards/createCards`, {
@@ -74,35 +71,9 @@ export const createCard = async (title, link, token) => {
     console.error("Card creation error:", err);
     throw err; 
   }
-}
+};
 
-/*
-export const getCurrentUser = async (token) => {
-   try {
-    const response = await fetch(`${BASE_URL}/auth/users/me`, {
-      method: "GET",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch user");
-    }
-
-    const data = await response.json();
-    console.log('API User Data:', data); // Debug log
-    return data;
-    
-  } catch (error) {
-    console.error("Failed to get user:", error);
-    throw error;
-  }
- 
-  };*/
-
-  export const updateAvatar = async (avatarData, token) => {
+export const updateAvatar = async (avatarData, token) => {
   try{
     const res = await fetch(`${BASE_URL}/auth/users/me/avatar`, {
       method: "PATCH",
@@ -122,10 +93,9 @@ export const getCurrentUser = async (token) => {
     console.error("Update Avatar error:", err);
     throw err; 
   }
-  }
+};
 
-
-    export const updateUserInformation = async (body, token) => {
+export const updateUserInformation = async (body, token) => {
   try{
     const res = await fetch(`${BASE_URL}/auth/users/me`, {
       method: "PATCH",
@@ -145,5 +115,74 @@ export const getCurrentUser = async (token) => {
     console.error("Update User:", err);
     throw err; 
   }
-  }
+}
 
+export const likeCard = async (cardId, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to like card');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Like card error:', error);
+    throw error;
+  }
+};
+
+export const deleteLike = async (cardId, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to remove like');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Remove like error:', error);
+    throw error;
+  }
+};
+
+export const changeLikeCardStatus = async (cardId, like, token) => {
+  return like ? likeCard(cardId, token) : deleteLike(cardId, token);
+};
+
+export const deleteCard = async (cardId, token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to delete card');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Delete card error:', error);
+    throw error;
+  }
+};

@@ -42,7 +42,6 @@ export const login = async (email, password) => {
   return data;
 };
 
-
 export const getCurrentUser = async (token) => {
   const response = await fetch(`${BASE_URL}/auth/users/me`, {
     method: "GET",
@@ -55,7 +54,6 @@ export const getCurrentUser = async (token) => {
   return handleResponse(response);
 };
 
-
 export const register = async (email, password) => {
   const response = await fetch(`${BASE_URL}/auth/signup`, {
       method: "POST",
@@ -66,15 +64,13 @@ export const register = async (email, password) => {
     });
     
      return handleResponse(response);
-  };
-
-
+};
   
 export const isAuthenticated = () => {
   return !!localStorage.getItem('userToken');
 };
 
-
 export const logout = () => {
   localStorage.removeItem('userToken');
+  localStorage.removeItem('user');
 };

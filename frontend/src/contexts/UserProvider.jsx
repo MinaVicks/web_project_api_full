@@ -7,12 +7,11 @@ export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    const logout = useCallback(() => {
+  const logout = useCallback(() => {
     localStorage.removeItem('userToken');
     setUser(null);
     setIsAuthenticated(false);
   }, []);
-
 
   const login = useCallback(async (email, password) => {
   try {
@@ -53,10 +52,7 @@ export function UserProvider({ children }) {
   }
 }, [logout]);
 
-
-
-
-  const handleUpdateAvatar = useCallback(async (avatarData) => {
+const handleUpdateAvatar = useCallback(async (avatarData) => {
     try {
       const token = localStorage.getItem('userToken');
       const updatedUser = await api.updateAvatar(avatarData, token);
@@ -80,11 +76,9 @@ const handleUpdateUser = useCallback(async (userData) => {
   }
 }, []);
 
-
-
   useEffect(() => {
     fetchCurrentUser();
-  }, [fetchCurrentUser]);
+}, [fetchCurrentUser]);
 
   return (
     <UserContext.Provider value={{

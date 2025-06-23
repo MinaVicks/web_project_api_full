@@ -122,6 +122,7 @@ function Header() {
       </section>
       {popup && (
         <Popup onClose={handleClosePopup} title={popup.title}>
+         
           {popup.children}
         </Popup>
       )}

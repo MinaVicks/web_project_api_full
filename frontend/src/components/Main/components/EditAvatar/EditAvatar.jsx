@@ -9,14 +9,13 @@ function EditAvatar({ onSubmitSuccess }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log({avatar: avatarRef.current.value});
-setIsLoading(true);
+     setIsLoading(true);
     setError(null);
     try {
       await handleUpdateAvatar(
       { avatar: avatarRef.current.value }
     );
-    
+    //onSubmitSuccess();
     } catch (err){
       setError(err.message.includes('HTML') 
       ? 'Server error - please try again later'
