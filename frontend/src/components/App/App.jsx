@@ -16,26 +16,6 @@ import UserContext from '../../contexts/UserContext.jsx';
 function App() {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(null);
-  //const [currentUser, setCurrentUser] = useState(null);
-  //const { user: currentUser } = useContext(UserContext);
-  
-
-  /* useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const token = localStorage.getItem('userToken');
-        const cardsData = await api.getCards(token);
-        setCards(cardsData);
-      } catch (err) {
-        setError(err.message);
-        console.log(error)
-      } 
-    };
-
-    fetchCards();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-*/
 
 
   async function handleCardLike (card,isLiked)  {
