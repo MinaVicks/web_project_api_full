@@ -44,8 +44,6 @@ useEffect(() => {
 
         const userData =  response.data || response;
 
-      
-
       } catch (err) {
         console.error('Card fetch error:', {
           error: err,
