@@ -4,7 +4,7 @@ import auth from "../middleware/auth.js";
 
 
 import { celebrate, Joi } from 'celebrate';
-import { validateEmail, validatePassword, validateURL } from '../utils/validators';
+import { validateEmail, validatePassword, validateURL } from '../utils/validators.js';
 
 
 const router = Router();
@@ -30,16 +30,16 @@ router.post("/signin", celebrate({
 router.get("/users/me",auth, getCurrentUser )
 router.patch('/users/me/avatar', celebrate({
     body: Joi.object().keys({
-      avatar: validateAvatar
+      avatar: validateURL
     })
   }), auth, updateAvatar);
 router.patch("/users/me",
-  celebrate({
+  /*celebrate({
     body: Joi.object().keys({
       name: validateName,
       about: validateAbout
     })
-  }), auth, updateProfile )
+  })*/ auth, updateProfile )
 
 
 export default router;

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { errors } from 'celebrate';
 import { celebrate, Joi } from 'celebrate';
-import { validateURL, validateEmail, validatePassword } from './utils/validators';
+import { validateURL, validateEmail, validatePassword } from './utils/validators.js';
 
 import cors from "cors";
 
@@ -14,7 +14,7 @@ import cardRoutes from './routes/cardRoutes.js';
 
 import { errorMiddleware, notFoundError } from './middleware/errorMiddleware.js';
 
-import { requestLogger, errorLogger, initLogs } from './utils/logger';
+import { requestLogger, errorLogger, initLogs } from './utils/logger.js';
 
 initLogs();
 

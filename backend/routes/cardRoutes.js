@@ -5,7 +5,7 @@ import auth from '../middleware/auth.js';
 import { getCards, createCard, deleteCard, likeCard, dislikeCard } from '../controllers/cardControllers.js';
 
 import { celebrate, Joi } from 'celebrate';
-import { validateTitle, validateLink } from '../utils/validators';
+import { validateTitle, validateLink } from '../utils/validators.js';
 
 router.use(auth);
 

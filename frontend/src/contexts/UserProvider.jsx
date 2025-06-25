@@ -1,4 +1,4 @@
-import {  useState, useEffect, useCallback } from 'react';
+import {  useState, useEffect, useCallback, useContext } from 'react';
 import * as api  from '../utils/api';
 import UserContext from './UserContext';
 import * as auth  from "../utils/auth";
@@ -88,8 +88,7 @@ const handleUpdateUser = useCallback(async (userData) => {
       isAuthenticated,
       login,
       logout,
-      handleUpdateAvatar,
-      refreshUser: fetchCurrentUser, handleUpdateUser
+      handleUpdateAvatar, handleUpdateUser
     }}>
       {children}
     </UserContext.Provider>

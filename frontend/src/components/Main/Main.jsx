@@ -56,7 +56,7 @@ useEffect(() => {
   };
 
   if (user) fetchCards();
-}, [user]);
+}, [user]);  //observador (esta al pendiente de un cambion en user)
 
   if (isLoading) return <div>Loading cards...</div>;
   if (error) return (
