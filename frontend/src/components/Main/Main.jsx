@@ -11,8 +11,8 @@ function Main({ onCardLike, onCardDelete }) {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useContext(UserContext);
-
+  const { user } = useContext(UserContext);  //user no pertenece a este componente, si no que es una const GLOBAL
+                                              //useEffect, rastrea el cambio incluso si ese cambio ocurre en otro componente
 
 
 useEffect(() => {
