@@ -20,7 +20,6 @@ const Login = () => {
     const response = await auth.login(email, password);
     
     if (response.token) {
-      login(response.user, response.token);
       navigate("/main");
     } else {
       setfailPopup(true);

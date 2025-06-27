@@ -21,7 +21,7 @@ export function UserProvider({ children }) {
       localStorage.setItem('userToken', response.token);
       setUser(response.user);
       setIsAuthenticated(true);
-      return response.user;
+      return response;
     }
     
     throw new Error(response.message || 'Login failed');

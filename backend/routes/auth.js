@@ -33,13 +33,7 @@ router.patch('/users/me/avatar', celebrate({
       avatar: validateURL
     })
   }), auth, updateAvatar);
-router.patch("/users/me",
-  /*celebrate({
-    body: Joi.object().keys({
-      name: validateName,
-      about: validateAbout
-    })
-  })*/ auth, updateProfile )
+router.patch("/users/me", auth, updateProfile )
 
 
 export default router;
