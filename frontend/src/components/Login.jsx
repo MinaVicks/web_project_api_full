@@ -17,7 +17,7 @@ const Login = () => {
  const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const response = await auth.login(email, password);
+    const response = await login(email, password);
     
     if (response.token) {
       navigate("/main");
