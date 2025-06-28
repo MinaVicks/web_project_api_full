@@ -9,7 +9,7 @@ function EditProfile({ onSubmitSuccess }) {
   const [about, setAbout] = useState(user.about); // Agrega la variable de estado para description
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   const handleNameChange = (event) => {
     setName(event.target.value); // Actualiza name cuando cambie la entrada
@@ -22,7 +22,7 @@ function EditProfile({ onSubmitSuccess }) {
   const handleSubmit = async (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado del envío de formularios
     setIsLoading(true);
-    setError(null);
+    setError(false);
     try{
     handleUpdateUser({ name, about});
      onSubmitSuccess();
@@ -69,7 +69,7 @@ function EditProfile({ onSubmitSuccess }) {
           value={about} // Vincula description con la entrada
           onChange={handleAboutChange} // Agrega el controlador onChange
         />
-        {error && <span className="popup__error" id="input-description-error">{error}</span>}
+        
       </label>
 
        <button 

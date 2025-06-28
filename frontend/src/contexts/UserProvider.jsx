@@ -79,13 +79,13 @@ const handleUpdateUser = useCallback(async (userData) => {
   }
 }, []);
 
-const handleNewPlace = useCallback (async (cardData , onSuccess) => {
+const handleNewPlace = useCallback (async (cardData) => {
   try{
      const token = localStorage.getItem('userToken');
     const newCard= await api.createCard(cardData.title, cardData.link, token);
-     setCards(prev => [...prev, ...newCard]);
+     setCards(prev => ({ ...prev, ...newCard}));
     
-      if (onSuccess) onSuccess();
+     
       return newCard;
 
   }catch (error){

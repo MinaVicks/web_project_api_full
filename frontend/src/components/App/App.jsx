@@ -15,7 +15,7 @@ import UserContext from '../../contexts/UserContext.jsx';
 
 function App() {
   const [cards, setCards] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
 
   async function handleCardLike (card,isLiked)  {
@@ -47,11 +47,15 @@ async function handleCardDelete(card) {
     console.error('Error deleting card:', error);
     return false;
   }
-}
+};
 
+
+
+ 
 
   return (
-    <UserProvider>
+    <UserProvider
+    >
     <Routes>
       <Route
       path="/main"

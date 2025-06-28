@@ -17,43 +17,16 @@ const handleAvatarChange = (event) =>{
 const handleSubmit = async (event) =>{
   event.preventDefault();
   setIsLoading(true);
-  setError(null);
-   console.log ("Nuevo avatar", avatar);
+  setError(false);
   try {
   await handleUpdateAvatar ({avatar});
- 
     onSubmitSuccess();
   } catch (err) {
      setError(err.message || "Failed to update");
     } finally {
       setIsLoading(false);
     }
-  }
-
-
-  /*
-  const { handleUpdateAvatar } = useContext(UserContext);
-  const avatarRef = useRef();
-    const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-     setIsLoading(true);
-    setError(null);
-    try {
-      await handleUpdateAvatar(
-      { avatar: avatarRef.current.value }
-    );
-    //onSubmitSuccess();
-    } catch (err){
-      setError(err.message.includes('HTML') 
-      ? 'Server error - please try again later'
-      : err.message);
-    }finally {
-      setIsLoading(false);
-    }
-  }*/
+  };
 
   return (
     <form
@@ -75,6 +48,7 @@ const handleSubmit = async (event) =>{
           onChange={handleAvatarChange}
         />
         <span className="popup__error" id="input-url-error"></span>
+        
       </label>
       {error && <p className="popup__error-message">{error}</p>}
 

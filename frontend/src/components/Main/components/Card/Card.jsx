@@ -3,7 +3,6 @@ import deleteCard from "../../../../assets/images/trash.svg";
 export default function Card({ card, onImageClick, onCardLike, onCardDelete, currentUser }) {
   const { title, link } = card;
   
-  const isOwn = currentUser && card.owner === currentUser._id;
   const isLiked = currentUser && card.likes.some(id => id === currentUser._id);
 
   return (

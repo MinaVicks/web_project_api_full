@@ -28,7 +28,7 @@ useEffect(() => {
 
       const response = await getCards(token);
 
-      console.log('API Response:', response);
+    //  console.log('API Response:', response);
       
         if (!response) {
           throw new Error('No response received from server');

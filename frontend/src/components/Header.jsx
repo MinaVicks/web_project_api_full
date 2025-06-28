@@ -16,7 +16,7 @@ import * as auth from "../utils/auth";
 function Header() {
  
   const { user, isAuthenticated, logout } = useContext(UserContext);
-  console.log(user);
+  //console.log(user);
   // const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
   const [isLoading, setIsLoading]= useState(null);
@@ -36,7 +36,7 @@ useEffect(() => {
 
       const response = await auth.getCurrentUser(token);
 
-      console.log('API Response:', response);
+      //console.log('API Response:', response);
       
         if (!response) {
           throw new Error('No response received from server');
@@ -62,7 +62,7 @@ useEffect(() => {
 
 
 
-  console.log('Header rendering with user:', user);
+  //console.log('Header rendering with user:', user);
   const [popup, setPopup] = useState(null);
 
   const closePopup = () => setPopup(null);

@@ -7,7 +7,9 @@ export default function NewCard({ onSubmitSuccess }) {
 
   const [error, setError] = useState(null);
 
-  const { handleNewPlace } = useContext(UserContext);
+  const userContext = useContext (UserContext)
+
+  const { handleNewPlace } = userContext;
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); // Actualiza name cuando cambie la entrada
