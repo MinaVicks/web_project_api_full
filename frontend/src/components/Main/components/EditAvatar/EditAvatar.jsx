@@ -2,6 +2,36 @@ import { useContext, useRef, useState } from "react";
 import UserContext from "../../../../contexts/UserContext";
 
 function EditAvatar({ onSubmitSuccess }) {
+  const userContext = useContext(UserContext);
+const { user, handleUpdateAvatar} =userContext;
+
+const [avatar, setAvatar] = useState (user.avatar);
+
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState(false);
+
+const handleAvatarChange = (event) =>{
+  setAvatar(event.target.value);
+}
+
+const handleSubmit = async (event) =>{
+  event.preventDefault();
+  setIsLoading(true);
+  setError(null);
+   console.log ("Nuevo avatar", avatar);
+  try {
+  await handleUpdateAvatar ({avatar});
+ 
+    onSubmitSuccess();
+  } catch (err) {
+     setError(err.message || "Failed to update");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+
+  /*
   const { handleUpdateAvatar } = useContext(UserContext);
   const avatarRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +53,7 @@ function EditAvatar({ onSubmitSuccess }) {
     }finally {
       setIsLoading(false);
     }
-  }
+  }*/
 
   return (
     <form
@@ -40,7 +70,9 @@ function EditAvatar({ onSubmitSuccess }) {
           placeholder="Enlace a la imagen"
           required
           type="url"
-          ref={avatarRef}
+          //ref={avatarRef}
+          value = {avatar}
+          onChange={handleAvatarChange}
         />
         <span className="popup__error" id="input-url-error"></span>
       </label>
@@ -53,5 +85,5 @@ function EditAvatar({ onSubmitSuccess }) {
     </form>
   );
 }
-/*popup__button_add*/
+
 export default EditAvatar;
