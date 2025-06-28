@@ -89,7 +89,7 @@ useEffect(() => {
 
   function handleOpenPopup(popup) {
     setPopup(popup);
-    console.log(user?.avatar)
+    console.log(user?.avatar);
   }
 
   function handleClosePopup() {

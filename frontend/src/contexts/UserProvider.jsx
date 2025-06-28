@@ -6,6 +6,7 @@ import * as auth  from "../utils/auth";
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [cards, setCards] =useState (null);
 
   const logout = useCallback(() => {
     localStorage.removeItem('userToken');
@@ -78,6 +79,22 @@ const handleUpdateUser = useCallback(async (userData) => {
   }
 }, []);
 
+const handleNewPlace = useCallback (async (cardData , onSuccess) => {
+  try{
+     const token = localStorage.getItem('userToken');
+    const newCard= await api.createCard(cardData.title, cardData.link, token);
+     setCards(prev => [...prev, ...newCard]);
+    
+      if (onSuccess) onSuccess();
+      return newCard;
+
+  }catch (error){
+   console.error('New card failed:', error);
+    throw error;
+  }
+}, []);
+
+
   useEffect(() => {
     fetchCurrentUser();
 }, [fetchCurrentUser]);
@@ -88,7 +105,9 @@ const handleUpdateUser = useCallback(async (userData) => {
       isAuthenticated,
       login,
       logout,
-      handleUpdateAvatar, handleUpdateUser
+      handleUpdateAvatar,
+      handleUpdateUser,
+      handleNewPlace
     }}>
       {children}
     </UserContext.Provider>

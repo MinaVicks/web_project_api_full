@@ -4,7 +4,10 @@ import UserContext   from "../../../../contexts/UserContext";
 export default function NewCard({ onSubmitSuccess }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
-  const { handleAppPlaceSubmit } = useContext(UserContext);
+
+  const [error, setError] = useState(null);
+
+  const { handleNewPlace } = useContext(UserContext);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); // Actualiza name cuando cambie la entrada
@@ -14,10 +17,35 @@ export default function NewCard({ onSubmitSuccess }) {
     setLink(event.target.value); // Actualiza description cuando cambie la entrada
   };
 
-  const handleSubmit = (event) => {
+  const validateURL = (url) => {
+    try {
+      new URL(url);
+      return url.startsWith('http://') || url.startsWith('https://');
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+     if (!title.trim() || !link.trim()) {
+      setError("Title and image link are required");
+      return;
+    }
+
+    if (!validateURL(link)) {
+      setError("Please enter a valid image URL");
+      return;
+    }
+
     console.log({ title, link });
-    handleAppPlaceSubmit({ title, link }, onSubmitSuccess);
+      try {
+      await handleNewPlace({ title, link });
+      onSubmitSuccess(); 
+    } catch (err) {
+      setError(err.message || "Failed to create card");
+    }
   };
 
   return (
