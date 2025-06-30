@@ -14,7 +14,6 @@ function Main({ onCardLike, onCardDelete }) {
   const { user } = useContext(UserContext);  //user no pertenece a este componente, si no que es una const GLOBAL
                                               //useEffect, rastrea el cambio incluso si ese cambio ocurre en otro componente
 
-
 useEffect(() => {
   const fetchCards = async () => {
     try {
@@ -58,13 +57,14 @@ useEffect(() => {
   if (user) fetchCards();
 }, [user]);  //observador (esta al pendiente de un cambion en user)
 
+/*
   if (isLoading) return <div>Loading cards...</div>;
   if (error) return (
     <div className="error-message">
       <p>Error loading cards: {error}</p>
       <button onClick={() => window.location.reload()}>Retry</button>
     </div>
-  );
+  );*/
 
 
   function handleImageClick(card) {
@@ -96,6 +96,16 @@ useEffect(() => {
   if (success) {
     setCards(prevCards => prevCards.filter(c => c._id !== card._id));
   }
+};
+
+const handleAddCard = async (cardData) =>{
+ try{
+   const newCard = await handleNewPlace (cardData);
+   setCards(prev => ({ newCard, ...prev}));
+
+ }catch(error){
+console.error('Card addNewCard error:', error);
+ }
 };
 
   return (

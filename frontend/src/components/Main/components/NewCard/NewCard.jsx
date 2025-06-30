@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
 import UserContext   from "../../../../contexts/UserContext";
 
+import {handleAddPlace} from "../../Main.jsx"
+
 export default function NewCard({ onSubmitSuccess }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
@@ -43,8 +45,8 @@ export default function NewCard({ onSubmitSuccess }) {
 
     console.log({ title, link });
       try {
-      await handleNewPlace({ title, link });
-      onSubmitSuccess(); 
+      await handleAddPlace({ title, link });
+      //onSubmitSuccess(); 
     } catch (err) {
       setError(err.message || "Failed to create card");
     }
