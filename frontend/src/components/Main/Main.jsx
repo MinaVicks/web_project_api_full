@@ -5,15 +5,13 @@ import ImagePopup from "./components/ImagePopup/ImagePopup";
 import {getCards} from "../../utils/api";
 import UserContext from "../../contexts/UserContext";
 
-function Main({ onCardLike, onCardDelete }) {
+function Main({ cards, onCardLike, onCardDelete }) {
   const [activePopup, setActivePopup] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
   const { user } = useContext(UserContext);  //user no pertenece a este componente, si no que es una const GLOBAL
                                               //useEffect, rastrea el cambio incluso si ese cambio ocurre en otro componente
 
+/*
 useEffect(() => {
   const fetchCards = async () => {
     try {
@@ -57,14 +55,36 @@ useEffect(() => {
   if (user) fetchCards();
 }, [user]);  //observador (esta al pendiente de un cambion en user)
 
-/*
   if (isLoading) return <div>Loading cards...</div>;
   if (error) return (
     <div className="error-message">
       <p>Error loading cards: {error}</p>
       <button onClick={() => window.location.reload()}>Retry</button>
     </div>
-  );*/
+  );
+
+
+
+
+
+const handleAddCard = async (cardData) => {
+  const token = localStorage.getItem('userToken');
+  const newCard = await api.createCard(cardData.title, cardData.link, token);
+  
+  // This forces a complete refresh of the cards list
+  const data = await api.getCards(token);
+  setCards(data);
+  
+  return newCard;
+};
+
+useEffect(() => {
+  console.log('Cards in Main:', cards);
+}, [cards]);
+*/
+ useEffect(() => {
+    console.log('Cards received in Main:', cards);
+  }, [cards]);
 
 
   function handleImageClick(card) {
@@ -77,7 +97,7 @@ useEffect(() => {
     setSelectedCard(null);
   };
 
-    const handleCardLike = async (card) => {
+      const handleCardLike = async (card) => {
       const isLiked = card.likes.some(id => id === user._id);
     try {
       const updatedCard = await onCardLike(card, isLiked);
@@ -98,15 +118,6 @@ useEffect(() => {
   }
 };
 
-const handleAddCard = async (cardData) =>{
- try{
-   const newCard = await handleNewPlace (cardData);
-   setCards(prev => ({ newCard, ...prev}));
-
- }catch(error){
-console.error('Card addNewCard error:', error);
- }
-};
 
   return (
     <main className="elements">

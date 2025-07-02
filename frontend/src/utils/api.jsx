@@ -61,12 +61,16 @@ export const createCard = async (title, link, token) => {
       body: JSON.stringify({ title, link }), 
     });
     
+    const responseData = await res.json();
+    console.log('Raw API response:', responseData);
+
     if (!res.ok) {
-      const error = await res.json();
-      throw new Error(error.message || "Failed to create card");
+      throw new Error(responseData.message || "Failed to create card");
     }
     
-    return await res.json();
+    
+    
+    return responseData;
   } catch (err) {
     console.error("Card creation error:", err);
     throw err; 

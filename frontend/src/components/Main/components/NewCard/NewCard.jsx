@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
-import UserContext   from "../../../../contexts/UserContext";
+import { useState } from "react";
 
-import {handleAddPlace} from "../../Main.jsx"
+
+//import {handleAddPlace} from "../../Main.jsx"
 
 export default function NewCard({ onSubmitSuccess }) {
   const [title, setTitle] = useState("");
@@ -9,16 +9,17 @@ export default function NewCard({ onSubmitSuccess }) {
 
   const [error, setError] = useState(null);
 
-  const userContext = useContext (UserContext)
+  
 
-  const { handleNewPlace } = userContext;
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); // Actualiza name cuando cambie la entrada
+    console.log(title);
   };
 
   const handleLinkChange = (event) => {
     setLink(event.target.value); // Actualiza description cuando cambie la entrada
+    console.log(link);
   };
 
   const validateURL = (url) => {
@@ -30,27 +31,33 @@ export default function NewCard({ onSubmitSuccess }) {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-     if (!title.trim() || !link.trim()) {
-      setError("Title and image link are required");
-      return;
-    }
-
-    if (!validateURL(link)) {
-      setError("Please enter a valid image URL");
-      return;
-    }
-
-    console.log({ title, link });
-      try {
-      await handleAddPlace({ title, link });
-      //onSubmitSuccess(); 
-    } catch (err) {
-      setError(err.message || "Failed to create card");
-    }
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  const formData = {
+    title: title.trim(),
+    link: link.trim()
   };
+  console.log('Submitting:', formData);
+  
+  if (!formData.title || !formData.link) {
+    setError("Title and image link are required");
+    return;
+  }
+
+  if (!validateURL(formData.link)) {
+    setError("Please enter a valid image URL");
+    return;
+  }
+
+  try {
+    await onSubmitSuccess(formData); // Pass the object directly
+    setTitle("");
+    setLink("");
+    setError(null);
+  } catch (err) {
+    setError(err.message || "Failed to create card");
+  }
+};
 
   return (
     <form

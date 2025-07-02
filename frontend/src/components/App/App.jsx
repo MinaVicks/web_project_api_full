@@ -6,17 +6,31 @@ import Main from '../Main/Main';
 import Footer from '../Footer';
 
 import { UserProvider } from '../../contexts/UserProvider.jsx';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from '../ProtectedRoute.jsx';
 import * as api  from "../../utils/api.jsx";
 
-import UserContext from '../../contexts/UserContext.jsx';
+
 
 function App() {
   const [cards, setCards] = useState([]);
   const [error, setError] = useState(false);
 
+    useEffect(() => {
+    const fetchInitialCards = async () => {
+      try {
+        const token = localStorage.getItem('userToken');
+        const data = await api.getCards(token);
+        setCards(data);
+      } catch (err) {
+        console.error('Failed to load cards:', err);
+        setError(true);
+      }
+    };
+    
+    fetchInitialCards();
+  }, []);
 
   async function handleCardLike (card,isLiked)  {
     
@@ -49,8 +63,46 @@ async function handleCardDelete(card) {
   }
 };
 
+useEffect(() => {
+  const fetchCards = async () => {
+    const token = localStorage.getItem('userToken');
+    const data = await api.getCards(token);
+    setCards(data);
+  };
+  fetchCards();
+}, []);
 
+useEffect(() => {
+  console.log('App.jsx cards state:', cards);
+}, [cards]);
 
+useEffect(() => {
+  if (cards.length === 0) {
+    console.log('No cards loaded - checking token...');
+    const token = localStorage.getItem('userToken');
+    console.log('Current token:', token);
+  }
+}, [cards]);
+
+// Keep your existing handleAddCard implementation
+const handleAddCard = async (cardData) => {
+  const token = localStorage.getItem('userToken');
+  try {
+    const response = await api.createCard(cardData.title, cardData.link, token);
+    const newCard = response.card || response.data;
+    
+    setCards(prevCards => {
+      const updatedCards = [newCard, ...prevCards];
+      console.log('Updated cards:', updatedCards);
+      return updatedCards;
+    });
+    
+    return newCard;
+  } catch (error) {
+    console.error('Error adding card:', error);
+    throw error;
+  }
+};
  
 
   return (
@@ -62,7 +114,7 @@ async function handleCardDelete(card) {
       element= {
        <ProtectedRoute>
         <div className="page">
-                <Header  />
+                <Header onAddCard={handleAddCard} />
                 <Main 
                 cards={cards} 
                 onCardLike={handleCardLike} 

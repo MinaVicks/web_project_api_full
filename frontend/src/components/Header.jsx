@@ -1,5 +1,4 @@
 import logo from "../assets/images/logo.svg";
-import avataar from "../assets/images/Avatar.png"
 import iconEditProfile from "../assets/images/Edit_off.svg";
 import addCard from "../assets/images/Add.svg";
 import iconEditAvatar from "../assets/images/edit_avatar.svg";
@@ -13,7 +12,7 @@ import UserContext  from '../contexts/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import * as auth from "../utils/auth";
 
-function Header() {
+function Header({onAddCard}) {
  
   const { user, isAuthenticated, logout } = useContext(UserContext);
   //console.log(user);
@@ -21,7 +20,7 @@ function Header() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading]= useState(null);
   const [error, setError]= useState(null);
-
+  const [popup, setPopup] = useState(null);
 
 useEffect(() => {
   const fetchUser = async () => {
@@ -63,7 +62,7 @@ useEffect(() => {
 
 
   //console.log('Header rendering with user:', user);
-  const [popup, setPopup] = useState(null);
+  
 
   const closePopup = () => setPopup(null);
 
@@ -71,7 +70,7 @@ useEffect(() => {
 
    const newCardPopup = {
     title: "Nuevo lugar",
-    children: <NewCard onSubmitSuccess={closePopup} />,
+    children: <NewCard onSubmitSuccess={(cardData) => handleNewCardSubmit(cardData)} />,
   };
 
   const editProfile = {
@@ -96,11 +95,21 @@ useEffect(() => {
     setPopup(null);
   }
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     auth.logout();
     navigate('/signin'); // Redirect to login page
   };
 
+const handleNewCardSubmit = async (cardData) => {
+  try {
+    await onAddCard(cardData); // This is handleAddCard from App.jsx
+  } catch (error) {
+    console.error('Failed to create card:', error);
+    throw error;
+  } finally {
+    closePopup();
+  }
+};
   return (
     <header className="header">
       <div className="header__container">

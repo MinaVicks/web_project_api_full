@@ -4,7 +4,7 @@ export default function Card({ card, onImageClick, onCardLike, onCardDelete, cur
   const { title, link } = card;
   
   const isLiked = currentUser && card.likes.some(id => id === currentUser._id);
-
+  console.log('Rendering card:', card._id);
   return (
     <div className="elements__item">
       <button

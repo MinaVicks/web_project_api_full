@@ -83,7 +83,7 @@ const handleNewPlace = useCallback (async (cardData) => {
   try{
      const token = localStorage.getItem('userToken');
     const newCard= await api.createCard(cardData.title, cardData.link, token);
-     //setCards(prev => ({ ...prev, ...newCard}));
+     setCards(prev => ({ ...prev, ...newCard}));
     
      
       return newCard;
