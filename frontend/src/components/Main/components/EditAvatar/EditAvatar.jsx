@@ -43,7 +43,6 @@ const handleSubmit = async (event) =>{
           placeholder="Enlace a la imagen"
           required
           type="url"
-          //ref={avatarRef}
           value = {avatar}
           onChange={handleAvatarChange}
         />

@@ -29,7 +29,7 @@ export const errorMiddleware = (err, req, res, next) => {
   } else if (err.name === 'DocumentNotFoundError') {
     statusCode = 404;
     message = 'No se encontró el recurso solicitado';
-  } else if (err.code === 11000) { // Error de duplicado en MongoDB
+  } else if (err.code === 11000) { 
     statusCode = 409;
     message = 'El correo electrónico ya existe en el servidor';
   } else if (err.message === 'No tienes permiso para esta acción') {
@@ -43,7 +43,6 @@ export const errorMiddleware = (err, req, res, next) => {
     message = err.message;
   }
 
-  // Respuesta de error estandarizada
   res.status(statusCode).json({
     message
   });

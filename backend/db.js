@@ -1,5 +1,5 @@
 import { connect } from 'mongoose';
-// Connect to MongoDB
+
 const connectDB = async () => {
   try {
     await connect("mongodb://localhost:27017/mydb");
@@ -11,7 +11,7 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-// Export the connectDB function
+
 import './models/user.js';
 import './models/Card.js';
 

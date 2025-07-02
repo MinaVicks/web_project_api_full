@@ -2,25 +2,25 @@ import { useState, useContext } from "react";
 import UserContext  from "../../../../contexts/UserContext";
 
 function EditProfile({ onSubmitSuccess }) {
-  const userContext = useContext(UserContext); // Obtiene el objeto currentUser
+  const userContext = useContext(UserContext); 
   const { user, handleUpdateUser } = userContext;
 
-  const [name, setName] = useState(user.name); // Agrega la variable de estado para name
-  const [about, setAbout] = useState(user.about); // Agrega la variable de estado para description
+  const [name, setName] = useState(user.name); 
+  const [about, setAbout] = useState(user.about); 
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const handleNameChange = (event) => {
-    setName(event.target.value); // Actualiza name cuando cambie la entrada
+    setName(event.target.value); 
   };
 
   const handleAboutChange = (event) => {
-    setAbout(event.target.value); // Actualiza description cuando cambie la entrada
+    setAbout(event.target.value);
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Evita el comportamiento predeterminado del envío de formularios
+    event.preventDefault(); 
     setIsLoading(true);
     setError(false);
     try{
@@ -50,8 +50,8 @@ function EditProfile({ onSubmitSuccess }) {
           placeholder="Nombre"
           required
           type="text"
-          value={name} // Vincula name con la entrada
-          onChange={handleNameChange} // Agrega el controlador onChange
+          value={name} 
+          onChange={handleNameChange} 
         />
         <span className="popup__error" id="input-name-error"></span>
       </label>
@@ -66,8 +66,8 @@ function EditProfile({ onSubmitSuccess }) {
           placeholder="Acerca de mí"
           required
           type="text"
-          value={about} // Vincula description con la entrada
-          onChange={handleAboutChange} // Agrega el controlador onChange
+          value={about} 
+          onChange={handleAboutChange}
         />
         
       </label>

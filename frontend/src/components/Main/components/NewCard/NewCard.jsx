@@ -1,8 +1,6 @@
 import { useState } from "react";
 
 
-//import {handleAddPlace} from "../../Main.jsx"
-
 export default function NewCard({ onSubmitSuccess }) {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
@@ -13,13 +11,13 @@ export default function NewCard({ onSubmitSuccess }) {
 
 
   const handleTitleChange = (event) => {
-    setTitle(event.target.value); // Actualiza name cuando cambie la entrada
-    console.log(title);
+    setTitle(event.target.value); 
+    
   };
 
   const handleLinkChange = (event) => {
-    setLink(event.target.value); // Actualiza description cuando cambie la entrada
-    console.log(link);
+    setLink(event.target.value); 
+    
   };
 
   const validateURL = (url) => {
@@ -37,7 +35,7 @@ const handleSubmit = async (event) => {
     title: title.trim(),
     link: link.trim()
   };
-  console.log('Submitting:', formData);
+  
   
   if (!formData.title || !formData.link) {
     setError("Title and image link are required");
@@ -50,7 +48,7 @@ const handleSubmit = async (event) => {
   }
 
   try {
-    await onSubmitSuccess(formData); // Pass the object directly
+    await onSubmitSuccess(formData); 
     setTitle("");
     setLink("");
     setError(null);

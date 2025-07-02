@@ -15,8 +15,6 @@ import * as auth from "../utils/auth";
 function Header({onAddCard}) {
  
   const { user, isAuthenticated, logout } = useContext(UserContext);
-  //console.log(user);
-  // const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
   const [isLoading, setIsLoading]= useState(null);
   const [error, setError]= useState(null);
@@ -35,7 +33,7 @@ useEffect(() => {
 
       const response = await auth.getCurrentUser(token);
 
-      //console.log('API Response:', response);
+      
       
         if (!response) {
           throw new Error('No response received from server');
@@ -57,16 +55,9 @@ useEffect(() => {
   };
 
   if (user) fetchUser();
-}, [user]);  //observador (esta al pendiente de un cambion en user)
-
-
-
-  //console.log('Header rendering with user:', user);
-  
+}, [user]);  
 
   const closePopup = () => setPopup(null);
-
-
 
    const newCardPopup = {
     title: "Nuevo lugar",
@@ -88,7 +79,6 @@ useEffect(() => {
 
   function handleOpenPopup(popup) {
     setPopup(popup);
-    console.log(user?.avatar);
   }
 
   function handleClosePopup() {
@@ -97,12 +87,12 @@ useEffect(() => {
 
   const handleLogout = () => {
     auth.logout();
-    navigate('/signin'); // Redirect to login page
+    navigate('/signin'); 
   };
 
 const handleNewCardSubmit = async (cardData) => {
   try {
-    await onAddCard(cardData); // This is handleAddCard from App.jsx
+    await onAddCard(cardData); 
   } catch (error) {
     console.error('Failed to create card:', error);
     throw error;
@@ -145,7 +135,7 @@ const handleNewCardSubmit = async (cardData) => {
             src={user?.avatar}
             alt="Profile picture"
             className="profile__avatar"
-            //key={user.avatar }
+            
           />
         </div>
 

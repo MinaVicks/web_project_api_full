@@ -5,17 +5,17 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configuración de directorios
+
 const logDir = path.join(__dirname, '../logs');
 const requestLogPath = path.join(logDir, 'request.log');
 const errorLogPath = path.join(logDir, 'error.log');
 
-// Crear directorio si no existe
+
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-// Función para escribir logs
+
 const writeLog = (filePath, data) => {
   const logEntry = JSON.stringify({
     timestamp: new Date().toISOString(),
@@ -27,7 +27,7 @@ const writeLog = (filePath, data) => {
   });
 };
 
-// Logger para solicitudes
+
 export const requestLogger = (req, res, next) => {
   const { method, originalUrl, ip, body, params, query } = req;
 
@@ -45,7 +45,7 @@ export const requestLogger = (req, res, next) => {
   next();
 };
 
-// Logger para errores
+
 export const errorLogger = (err, req, res, next) => {
   writeLog(errorLogPath, {
     type: 'error',
@@ -63,7 +63,7 @@ export const errorLogger = (err, req, res, next) => {
   next(err);
 };
 
-// Asegurar que los archivos de log existan
+
 export const initLogs = () => {
   if (!fs.existsSync(requestLogPath)) {
     fs.writeFileSync(requestLogPath, '');

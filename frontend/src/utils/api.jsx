@@ -35,7 +35,7 @@ export const getCards = async (token) => {
   
   if (!Array.isArray(data.cards)) {
     console.error('Expected cards array, got:', data);
-    return []; // Return empty array as fallback
+    return [];
   }
   
   return data.cards;
@@ -62,13 +62,10 @@ export const createCard = async (title, link, token) => {
     });
     
     const responseData = await res.json();
-    console.log('Raw API response:', responseData);
-
+   
     if (!res.ok) {
       throw new Error(responseData.message || "Failed to create card");
     }
-    
-    
     
     return responseData;
   } catch (err) {

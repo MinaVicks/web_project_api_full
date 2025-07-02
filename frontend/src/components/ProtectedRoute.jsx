@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('userToken');
 
   useEffect(() => {
-    // Verify token on mount
+    
     const verifyToken = async () => {
       try {
         await getCurrentUser(token);

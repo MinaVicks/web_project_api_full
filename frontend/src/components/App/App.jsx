@@ -32,23 +32,23 @@ function App() {
     fetchInitialCards();
   }, []);
 
-  async function handleCardLike (card,isLiked)  {
-    
-  const token = localStorage.getItem('userToken'); 
-
+const handleCardLike = async (card, isLiked) => {
+  const token = localStorage.getItem('userToken');
   try {
     const updatedCard = await api.changeLikeCardStatus(card._id, !isLiked, token);
+    
+    setCards(prevCards => prevCards.map(c => 
+      c._id === card._id ? updatedCard : c
+    ));
+    
     return updatedCard;
-  
   } catch (error) {
     console.error('Error updating like:', error);
+    throw error; 
   }
-    console.log('Liked card:', card);
-  };
-
-async function handleCardDelete(card) {
+};
+const handleCardDelete = async (card) => {
   const token = localStorage.getItem('userToken');
-  
   if (!window.confirm('Are you sure you want to delete this card?')) {
     return false;
   }
@@ -72,19 +72,16 @@ useEffect(() => {
   fetchCards();
 }, []);
 
-useEffect(() => {
-  console.log('App.jsx cards state:', cards);
-}, [cards]);
 
 useEffect(() => {
   if (cards.length === 0) {
-    console.log('No cards loaded - checking token...');
+   
     const token = localStorage.getItem('userToken');
-    console.log('Current token:', token);
+
   }
 }, [cards]);
 
-// Keep your existing handleAddCard implementation
+
 const handleAddCard = async (cardData) => {
   const token = localStorage.getItem('userToken');
   try {
@@ -92,8 +89,7 @@ const handleAddCard = async (cardData) => {
     const newCard = response.card || response.data;
     
     setCards(prevCards => {
-      const updatedCards = [newCard, ...prevCards];
-      console.log('Updated cards:', updatedCards);
+      const updatedCards = [ ...prevCards, newCard];
       return updatedCards;
     });
     

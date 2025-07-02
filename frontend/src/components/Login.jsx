@@ -32,7 +32,7 @@ const Login = () => {
 
    const handlePopupClose = () => {
     setfailPopup(false);
-    console.log("pop close");
+    
   };
 
 

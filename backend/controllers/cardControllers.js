@@ -84,7 +84,7 @@ export async function dislikeCard(req, res, next){
     try{
     const card = await Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // elimina _id del array
+    { $pull: { likes: req.user._id } }, 
     { new: true }
   );
   res.json(card);

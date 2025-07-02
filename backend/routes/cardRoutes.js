@@ -1,4 +1,4 @@
-// routes/cardRoutes.js
+
 import { Router } from 'express';
 const router = Router();
 import auth from '../middleware/auth.js';
@@ -17,8 +17,8 @@ router.post('/createCards', celebrate({
       link: validateLink
     })
   }), createCard);
-router.delete('/:cardId', deleteCard); // Note :cardId
-router.put('/:cardId/likes', likeCard); // Note :cardId
-router.delete('/:cardId/likes', dislikeCard); // Note :cardId
+router.delete('/:cardId', deleteCard);
+router.put('/:cardId/likes', likeCard); 
+router.delete('/:cardId/likes', dislikeCard); 
 
 export default router;

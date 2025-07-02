@@ -70,8 +70,6 @@ const handleUpdateUser = useCallback(async (userData) => {
     const token = localStorage.getItem('userToken');
     const updatedUser = await api.updateUserInformation(userData, token);
     setUser(prev => ({ ...prev, ...updatedUser }));
-    
-    console.log('Response:', updatedUser);
     return updatedUser;
   } catch (error) {
     console.error('User update failed:', error);
@@ -83,7 +81,7 @@ const handleNewPlace = useCallback (async (cardData) => {
   try{
      const token = localStorage.getItem('userToken');
     const newCard= await api.createCard(cardData.title, cardData.link, token);
-     setCards(prev => ({ ...prev, ...newCard}));
+     setCards(prev => ({ ...newCard, ...prev}));
     
      
       return newCard;
