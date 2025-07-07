@@ -9,9 +9,9 @@ const handleResponse = async (response) => {
     error.response = data;
     throw error;
   }
-  
   return data;
-};
+};//no error
+
 
 export const getProtectedData = async () => {
   const token = localStorage.getItem('userToken');

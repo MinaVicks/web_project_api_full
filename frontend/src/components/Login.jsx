@@ -21,6 +21,7 @@ const Login = () => {
     
     if (response.token) {
       navigate("/main");
+      console.log("done");
     } else {
       setfailPopup(true);
     }
