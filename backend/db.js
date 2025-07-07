@@ -4,7 +4,7 @@ const connectDB = async () => {
   try {
     await connect("mongodb://localhost:27017/mydb");
 
-    console.log('MongoDB connected successfully');
+    console.log('MongoDB connected');
 
   } catch (error) {
     console.error('MongoDB connection error:', error);
@@ -12,7 +12,7 @@ const connectDB = async () => {
   }
 };
 
-import './models/User.js';
-import './models/Card.js';
+import './models/user.js';
+import './models/card.js';
 
 export default connectDB;
