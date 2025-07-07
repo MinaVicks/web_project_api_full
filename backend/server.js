@@ -2,8 +2,7 @@ import express, { json } from 'express';
 import dotenv from 'dotenv';
 
 import { errors } from 'celebrate';
-import { celebrate, Joi } from 'celebrate';
-import { validateURL, validateEmail, validatePassword } from './utils/validators.js';
+
 
 import cors from "cors";
 
