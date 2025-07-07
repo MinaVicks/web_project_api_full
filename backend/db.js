@@ -12,7 +12,7 @@ const connectDB = async () => {
   }
 };
 
-import './models/user.js';
+import './models/User.js';
 import './models/Card.js';
 
 export default connectDB;
