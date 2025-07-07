@@ -2,7 +2,7 @@
 import { Router } from 'express';
 const router = Router();
 import auth from '../middleware/auth.js';
-import { getCards, createCard, deleteCard, likeCard, dislikeCard } from '../controllers/cardControllers.js';
+import { getCards, createCard, deleteCard, likeCard, dislikeCard } from '../controllers/cardcontrollers.js';
 
 import { celebrate, Joi } from 'celebrate';
 import { validateTitle, validateLink } from '../utils/validators.js';

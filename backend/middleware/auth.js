@@ -10,7 +10,6 @@ if(!token) return res.status(401).json({error: "No se encuentra el token"})
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
         req.user = { _id: decoded.userId }; 
         next(); 
-        console.log("cambio minuscula")
     }
     catch (error) {
       

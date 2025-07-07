@@ -12,7 +12,7 @@ import authRoutes from './routes/auth.js';
 import auth from './middleware/auth.js';
 import cardRoutes from './routes/cardRoutes.js';
 
-import { errorMiddleware, notFoundError } from './middleware/errorMiddleware.js';
+import { errorMiddleware, notFoundError } from './middleware/errormiddleware.js';
 
 import { requestLogger, errorLogger, initLogs } from './utils/logger.js';
 
@@ -36,7 +36,7 @@ app.use(notFoundError);
 app.use(errorMiddleware);
 
 app.get("/", (req,res) =>{
-    console.log("Middleware funciono")
+    console.log("Middleware funciono update")
 });
 
 app.get("/api/protegida" , auth, (req, res) => {

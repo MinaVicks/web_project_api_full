@@ -1,11 +1,11 @@
-import { Card } from "../models/Card.js";
-import { successResponse } from "../utils/ResponseUtils.js";
+import { Card } from "../models/card.js";
+import { successResponse } from "../utils/responseutils.js";
 
 import { 
   BadRequestError, 
   ForbiddenError, 
   NotFoundError 
-} from '../utils/errorUtils.js';
+} from '../utils/errorutils.js';
 
 export async function getCards(req, res, next){
     try{

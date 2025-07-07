@@ -4,9 +4,9 @@ import {
   BadRequestError, 
   ConflictError, 
   NotFoundError 
-} from '../utils/errorUtils.js';
+} from '../utils/errorutils.js';
 
-import { successResponse, errorResponse } from '../utils/ResponseUtils.js';
+import { successResponse, errorResponse } from '../utils/responseutils.js';
 import { hash as _hash, compare } from 'bcryptjs';
 import pkg from 'jsonwebtoken';
 const { sign } = pkg;
